@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using nest_exporter.Nest;
+using nest_exporter.Services;
 
 namespace nest_exporter
 {
@@ -30,8 +29,12 @@ namespace nest_exporter
                 .ConfigureServices(services =>
                 {
                     services.AddLogging();
+                    services.AddHttpClient();
+                    // Remove logging from httpclient as it prints every request to info
+                    services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
                     services.AddHostedService<ThermostatCollectorService>();
                     services.AddScoped<IThermostatCollector, ThermostatCollector>();
+                    services.AddScoped<NestClient>();
                 });
     }
 }
