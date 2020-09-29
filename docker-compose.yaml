@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   nest-exporter:
-    image: theeadie/nest-exporter:latest
+    build: .
     ports:
       - "5005:80"
     volumes:
