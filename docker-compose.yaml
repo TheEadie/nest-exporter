@@ -5,6 +5,6 @@ services:
     ports:
       - "5005:80"
     volumes:
-      - C:\Users\work\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+      - $HOME/.microsoft/usersecrets:/root/.microsoft/usersecrets/
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
