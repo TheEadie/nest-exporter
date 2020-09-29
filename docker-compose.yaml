@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  nest-exporter:
+    image: theeadie/nest-exporter:latest
+    ports:
+      - "5005:80"
+    volumes:
+      - C:\Users\work\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
