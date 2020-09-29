@@ -5,4 +5,8 @@
     <RootNamespace>nest_exporter</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="prometheus-net.AspNetCore" Version="3.6.0" />
+  </ItemGroup>
+
 </Project>

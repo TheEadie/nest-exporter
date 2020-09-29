@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prometheus;
 
 namespace nest_exporter
 {
@@ -26,6 +27,8 @@ namespace nest_exporter
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapMetrics();
+                Metrics.SuppressDefaultMetrics();
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");
