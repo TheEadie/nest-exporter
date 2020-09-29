@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +22,10 @@ namespace nest_exporter
                 .ConfigureLogging(logging =>
                 {
                     logging.AddConsole();
+                })
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddEnvironmentVariables(prefix: "NestExporter_");
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

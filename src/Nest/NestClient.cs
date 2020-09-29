@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -26,29 +27,53 @@ namespace nest_exporter.Nest
             _logger = logger;
         }
 
+        public void Configure(string clientId, string clientSecret, string projectId, string refreshToken)
+        {
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+            _projectId = projectId;
+            _refreshToken = refreshToken;
+        }
+
         public async Task<ThermostatInfo> GetThermostatInfo()
         {
-            var httpClient = _clientFactory.CreateClient();
-            httpClient.BaseAddress = new Uri("https://smartdevicemanagement.googleapis.com/");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            var result = await CallNestApi<DevicesResponse>($"v1/enterprises/{_projectId}/devices");
 
-            var response = await httpClient.GetAsync($"v1/enterprises/{_projectId}/devices");
-
-            if (!response.IsSuccessStatusCode) throw new Exception("Failed to get information from thermostat");
-
-            await using var stream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<DevicesResponse>(stream);
             var thermostat = result.Devices.First();
-
             return new ThermostatInfo(thermostat.Traits.Info.Name,
                 thermostat.Traits.Temperature.ActualTemperatureCelsius,
                 thermostat.Traits.TargetTemperature.TargetTemperatureCelsius,
                 thermostat.Traits.Humidity.HumidityPercent,
                 thermostat.Traits.Hvac.Status);
-
         }
 
-        public async Task RefreshAccessToken()
+        private async Task<T> CallNestApi<T>(string requestUri)
+        {
+            var httpClient = _clientFactory.CreateClient();
+            httpClient.BaseAddress = new Uri("https://smartdevicemanagement.googleapis.com/");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+
+            var response = await httpClient.GetAsync(requestUri);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                // Retry with newer access token
+                await RefreshAccessToken();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+                response = await httpClient.GetAsync(requestUri);
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Failed to get info from Nest API. Response: {response.StatusCode}");
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<T>(stream);
+            return result;
+        }
+
+        private async Task RefreshAccessToken()
         {
             var httpClient = _clientFactory.CreateClient();
             httpClient.BaseAddress = new Uri("https://www.googleapis.com/");
