@@ -30,3 +30,6 @@ msbuild.wrn
 
 # Rider
 .idea/
+
+# Secrets
+*.env
