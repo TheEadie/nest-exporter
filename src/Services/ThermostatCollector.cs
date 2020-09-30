@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -46,19 +47,26 @@ namespace nest_exporter.Services
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                _logger.LogDebug("Running nest monitoring loop");
+                try
+                {
+                    _logger.LogInformation("Calling Nest API to update stats");
 
-                var thermostatInfo = await _nestClient.GetThermostatInfo();
-                ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
-                TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
-                Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
-                Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Status == "OFF" ? 0 : 1);
+                    var thermostatInfo = await _nestClient.GetThermostatInfo();
+                    ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
+                    TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
+                    Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
+                    Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Status == "OFF" ? 0 : 1);
 
-                _logger.LogInformation($"{thermostatInfo.Name}: " +
-                                       $"Central heating is {thermostatInfo.Status}. " +
-                                       $"It is currently {thermostatInfo.ActualTemp}C, {thermostatInfo.Humidity}% humidity. " +
-                                       $"Target is {thermostatInfo.TargetTemp}c");
-                await Task.Delay(60000, cancellationToken);
+                    _logger.LogInformation($"{thermostatInfo.Name}: " +
+                                        $"Central heating is {thermostatInfo.Status}. " +
+                                        $"It is currently {thermostatInfo.ActualTemp}C, {thermostatInfo.Humidity}% humidity. " +
+                                        $"Target is {thermostatInfo.TargetTemp}c");
+                    await Task.Delay(60000, cancellationToken);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError("Error calling Nest API", exception);
+                }
             }
         }
     }
