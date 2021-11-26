@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
@@ -7,10 +7,10 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY src/ ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish --runtime alpine-x64 -c Release --self-contained true -p:PublishTrimmed=true -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-alpine
 WORKDIR /app
 COPY --from=build /app/out .
-ENTRYPOINT ["dotnet", "nest-exporter.dll"]
+ENTRYPOINT ["./nest-exporter"]
