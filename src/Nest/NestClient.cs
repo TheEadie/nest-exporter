@@ -40,7 +40,7 @@ namespace nest_exporter.Nest
             var result = await CallNestApi<DevicesResponse>($"v1/enterprises/{_projectId}/devices");
 
             var thermostat = result.Devices.First();
-            return new ThermostatInfo("Living Room",
+            return new ThermostatInfo(thermostat.Traits.Info.Name,
                 thermostat.Traits.Temperature.ActualTemperatureCelsius,
                 thermostat.Traits.TargetTemperature.TargetTemperatureCelsius,
                 thermostat.Traits.Humidity.HumidityPercent,
