@@ -6,6 +6,6 @@
     <UserSecretsId>f9dfba6b-bc35-43f9-bfb3-0bd83116bbb4</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="prometheus-net.AspNetCore" Version="5.0.2" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />
   </ItemGroup>
 </Project>
