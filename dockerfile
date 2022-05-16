@@ -10,7 +10,7 @@ COPY src/ ./
 RUN dotnet publish -c Release -o out --no-restore
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/runtime:6.0.5-alpine3.15@sha256:2e7c6d7e48c949505ae11a3f4c4f0d146910637b5dfd679343574f24783b9bbe
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.5-alpine3.15@sha256:c44e49a486c7643dd0ea7c63f3f9bf0d6318d6a86666348047145654327b0b46
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["./nest-exporter"]
