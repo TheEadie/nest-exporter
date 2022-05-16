@@ -1,16 +1,24 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.300-alpine3.15@sha256:9d5f437adddaacf4c980b29b69c5176572ec7dd029a67db7e54a4b243524441d AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0.300-alpine3.15@sha256:9d5f437adddaacf4c980b29b69c5176572ec7dd029a67db7e54a4b243524441d AS build
 WORKDIR /app
+
+# Write the dotnet format RID to the filesystem for use later
+ARG TARGETPLATFORM
+RUN case ${TARGETPLATFORM} in \
+         "linux/amd64")  RID=x64  ;; \
+         "linux/arm64")  RID=arm64  ;; \
+    esac \
+    && echo ${RID} > RID
 
 # Copy csproj and restore as distinct layers
 COPY src/*.csproj ./
-RUN dotnet restore
+RUN dotnet restore --runtime alpine-$(cat RID)
 
 # Copy everything else and build
 COPY src/ ./
-RUN dotnet publish -c Release -o out --no-restore
+RUN dotnet publish -c Release --runtime alpine-$(cat RID) --self-contained -p:PublishTrimmed=true -o out --no-restore
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.5-alpine3.15@sha256:c44e49a486c7643dd0ea7c63f3f9bf0d6318d6a86666348047145654327b0b46
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.4-alpine3.15@sha256:5f654b6a88a4752ea1751b2dc4229c57db7bac8436fb201a64667d32e23fdbc9
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["./nest-exporter"]
