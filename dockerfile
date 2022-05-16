@@ -7,10 +7,10 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY src/ ./
-RUN dotnet publish --runtime alpine-x64 -c Release --self-contained true -p:PublishTrimmed=true -o out
+RUN dotnet publish -c Release -o out --no-restore
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.4-alpine3.15@sha256:5f654b6a88a4752ea1751b2dc4229c57db7bac8436fb201a64667d32e23fdbc9
+FROM mcr.microsoft.com/dotnet/runtime:6.0.5-alpine3.15@sha256:2e7c6d7e48c949505ae11a3f4c4f0d146910637b5dfd679343574f24783b9bbe
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["./nest-exporter"]
