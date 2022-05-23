@@ -13,7 +13,7 @@ PATCH=0
 # Get last tag
 LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
 HEAD_HASH=$(git rev-parse --verify HEAD)
-TAG_HASH=$(git log -1 --format=format:"%H" $LATEST_TAG | tail -n1)
+TAG_HASH=$(git log -1 --format=format:"%H" "$LATEST_TAG" 2>/dev/null | tail -n1)
 
 if [[ -z "$LATEST_TAG" ]]; then
     echo "$NEXT_VERSION.0"
@@ -21,7 +21,7 @@ if [[ -z "$LATEST_TAG" ]]; then
 fi
 
 if [[ "$HEAD_HASH" == "$TAG_HASH" ]]; then
-    echo $LATEST_TAG
+    echo "$LATEST_TAG"
     exit
 fi
 

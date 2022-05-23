@@ -15,12 +15,12 @@ default: build
 
 build:
 	@docker buildx build . \
-		-t $(IMAGE_NAME):dev \
+		-t $(IMAGE_NAME):$(VERSION)-dev \
 		--load
 
 build-all-platforms:
 	@docker buildx build . \
-		-t $(IMAGE_NAME):build \
+		-t $(IMAGE_NAME):$(VERSION) \
 		--platform $(PLATFORMS)
 
 start:
