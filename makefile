@@ -1,13 +1,48 @@
-default: docker
+IMAGE_NAME = theeadie/nest-exporter
+PLATFORMS = linux/amd64,linux/arm64
+NEXT_VERSION = 0.1
 
-docker:
-	docker build -t theeadie/nest-exporter:dev .
+GITHUB_REPO = theeadie/home-server
+GITHUB_AUTH_TOKEN = empty
+
+VERSION = $(shell ./.build/version.sh $(NEXT_VERSION))
+VERSION_MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+VERSION_MINOR = $(word 2,$(subst ., ,$(VERSION)))
+VERSION_PATCH = $(word 2,$(subst ., ,$(VERSION)))
+
+## Build
+default: build
 
 build:
-	docker buildx build -t theeadie/nest-exporter:build . --platform linux/amd64,linux/arm64
+	@docker buildx build . \
+		-t $(IMAGE_NAME):dev \
+		--load
+
+build-all-platforms:
+	@docker buildx build . \
+		-t $(IMAGE_NAME):build \
+		--platform $(PLATFORMS)
 
 start:
-	docker-compose up -d --build
+	@docker-compose up -d --build
 
 stop:
-	docker-compose down
+	@docker-compose down
+
+version:
+	@echo $(VERSION)
+
+## Release
+release: | docker-push github-release
+
+docker-push:
+	@docker buildx build . \
+		-t $(IMAGE_NAME):latest \
+		-t $(IMAGE_NAME):$(VERSION) \
+		-t $(IMAGE_NAME):$(VERSION_MAJOR) \
+		-t $(IMAGE_NAME):$(VERSION_MAJOR).$(VERSION_MINOR) \
+		--platform $(PLATFORMS) \
+		--push
+
+github-release:
+	@./.build/github-release.sh $(VERSION) $(VERSION) $(GITHUB_AUTH_TOKEN) $(GITHUB_REPO)
