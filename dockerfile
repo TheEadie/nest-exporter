@@ -15,7 +15,16 @@ RUN dotnet restore --runtime alpine-$(cat RID)
 
 # Copy everything else and build
 COPY src/ ./
-RUN dotnet publish -c Release --runtime alpine-$(cat RID) --self-contained -p:PublishTrimmed=true -o out --no-restore
+ARG VERSION=0.0.1
+RUN dotnet publish \
+        -c Release \
+        --runtime alpine-$(cat RID) \
+        --self-contained \
+        -p:PublishTrimmed=true \
+        -p:AssemblyVersion=${VERSION} \
+        -p:Version=${VERSION} \
+        -o out \
+        --no-restore
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.4-alpine3.15@sha256:5f654b6a88a4752ea1751b2dc4229c57db7bac8436fb201a64667d32e23fdbc9

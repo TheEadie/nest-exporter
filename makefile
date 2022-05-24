@@ -17,15 +17,18 @@ default: build
 build:
 	@docker buildx build . \
 		-t $(IMAGE_NAME):$(VERSION)-dev \
+		--build-arg VERSION=$(VERSION) \
 		--load
 
 build-all-platforms:
 	@docker buildx build . \
 		-t $(IMAGE_NAME):$(VERSION) \
+		--build-arg VERSION=$(VERSION) \
 		--platform $(PLATFORMS)
 
 start:
-	@docker-compose up -d --build
+	@docker-compose build --build-arg VERSION=$(VERSION)
+	@docker-compose up -d
 
 stop:
 	@docker-compose down
@@ -42,6 +45,7 @@ docker-push:
 		-t $(IMAGE_NAME):$(VERSION) \
 		-t $(IMAGE_NAME):$(VERSION_MAJOR) \
 		-t $(IMAGE_NAME):$(VERSION_MAJOR).$(VERSION_MINOR) \
+		--build-arg VERSION=$(VERSION) \
 		--platform $(PLATFORMS) \
 		--push
 
