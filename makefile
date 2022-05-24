@@ -1,6 +1,7 @@
 IMAGE_NAME = theeadie/nest-exporter
 PLATFORMS = linux/amd64,linux/arm64
 NEXT_VERSION = 0.1
+TAG_PREFIX = nest-exporter/
 
 GITHUB_REPO = theeadie/home-server
 GITHUB_AUTH_TOKEN = empty
@@ -45,4 +46,4 @@ docker-push:
 		--push
 
 github-release:
-	@./.build/github-release.sh $(VERSION) $(VERSION) $(GITHUB_AUTH_TOKEN) $(GITHUB_REPO)
+	@./.build/github-release.sh $(VERSION) $(TAG_PREFIX)$(VERSION) $(GITHUB_AUTH_TOKEN) $(GITHUB_REPO)
