@@ -1,9 +1,9 @@
 IMAGE_NAME = theeadie/nest-exporter
 PLATFORMS = linux/amd64,linux/arm64
-NEXT_VERSION = 0.1
+NEXT_VERSION = 0.2
 TAG_PREFIX = nest-exporter/
 
-GITHUB_REPO = theeadie/home-server
+GITHUB_REPO = theeadie/nest-exporter
 GITHUB_AUTH_TOKEN = empty
 
 VERSION = $(shell ./.build/version.sh $(NEXT_VERSION))
