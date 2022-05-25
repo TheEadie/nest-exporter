@@ -1,3 +1,8 @@
+FROM hadolint/hadolint:2.10.0-alpine@sha256:588dc410f08b4dbbf5fa94f9d0c6b4baaf4216815d5adfce9ceb306af61c7cce as lint-dockerfile
+WORKDIR /app
+COPY dockerfile .
+RUN /bin/hadolint dockerfile
+
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0.300-alpine3.15@sha256:9d5f437adddaacf4c980b29b69c5176572ec7dd029a67db7e54a4b243524441d AS build
 WORKDIR /app
 
@@ -11,14 +16,14 @@ RUN case ${TARGETPLATFORM} in \
 
 # Copy csproj and restore as distinct layers
 COPY src/*.csproj ./
-RUN dotnet restore --runtime alpine-$(cat RID)
+RUN dotnet restore --runtime alpine-"$(cat RID)"
 
 # Copy everything else and build
 COPY src/ ./
 ARG VERSION=0.0.1
 RUN dotnet publish \
         -c Release \
-        --runtime alpine-$(cat RID) \
+        --runtime alpine-"$(cat RID)" \
         --self-contained \
         -p:PublishTrimmed=true \
         -p:AssemblyVersion=${VERSION} \
