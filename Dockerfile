@@ -1,7 +1,7 @@
 FROM hadolint/hadolint:2.10.0-alpine@sha256:588dc410f08b4dbbf5fa94f9d0c6b4baaf4216815d5adfce9ceb306af61c7cce as lint-dockerfile
 WORKDIR /app
-COPY dockerfile .
-RUN /bin/hadolint dockerfile
+COPY Dockerfile .
+RUN /bin/hadolint Dockerfile
 
 FROM koalaman/shellcheck-alpine:v0.8.0@sha256:f42fde76d2d14a645a848826e54a4d650150e151d9c81057c898da89a82c8a56 as lint-sh
 WORKDIR /app
