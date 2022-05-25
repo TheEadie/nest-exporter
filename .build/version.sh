@@ -5,7 +5,7 @@ TAG_PREFIX="$2"
 
 # Read Version parts
 IFS='.'  
-read -a VERSION_PARTS <<<"$NEXT_VERSION"
+read -r -a VERSION_PARTS <<<"$NEXT_VERSION"
   
 MAJOR="${VERSION_PARTS[0]}"
 MINOR="${VERSION_PARTS[1]}"
@@ -26,13 +26,13 @@ if [[ "$HEAD_HASH" == "$TAG_HASH" ]]; then
     exit
 fi
 
-if [[ ! -z "$TAG_PREFIX" ]]; then
-    LATEST_TAG=${LATESTTAG#"$TAG_PREFIX"}
+if [[ -n "$TAG_PREFIX" ]]; then
+    LATEST_TAG=${LATEST_TAG#"$TAG_PREFIX"}
 fi
 
 # Read Version parts
 IFS='.'  
-read -a VERSION_PARTS <<<"$LATEST_TAG"
+read -r -a VERSION_PARTS <<<"$LATEST_TAG"
 
 LATEST_MAJOR="${VERSION_PARTS[0]}"
 LATEST_MINOR="${VERSION_PARTS[1]}"

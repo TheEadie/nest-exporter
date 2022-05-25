@@ -36,11 +36,16 @@ stop:
 version:
 	@echo $(VERSION)
 
-lint: | lint-dockerfile
+lint: | lint-dockerfile lint-sh
 
 lint-dockerfile:
 	@docker buildx build . \
 		--target lint-dockerfile
+
+lint-sh:
+	@docker buildx build . \
+		--target lint-sh
+
 
 ## Release
 release: | docker-push github-release
