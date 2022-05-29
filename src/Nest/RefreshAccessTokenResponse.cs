@@ -4,7 +4,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace nest_exporter.Nest;
+namespace NestExporter.Nest;
 
 internal class RefreshAccessTokenResponse
 {

@@ -1,4 +1,4 @@
-namespace nest_exporter.Nest;
+namespace NestExporter.Nest;
 
 public class ThermostatInfo
 {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
 
-namespace nest_exporter;
+namespace NestExporter;
 
 public class Startup
 {

@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace nest_exporter.Nest;
+namespace NestExporter.Nest;
 
 internal class DevicesResponse
 {

@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using nest_exporter.Nest;
-using nest_exporter.Services;
+using NestExporter.Nest;
+using NestExporter.Services;
 
-namespace nest_exporter;
+namespace NestExporter;
 
 public static class Program
 {

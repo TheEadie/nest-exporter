@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace nest_exporter.Services;
+namespace NestExporter.Services;
 
 public class ThermostatCollectorService : BackgroundService
 {

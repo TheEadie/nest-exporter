@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace nest_exporter.Services;
+namespace NestExporter.Services;
 
 internal interface IThermostatCollector
 {

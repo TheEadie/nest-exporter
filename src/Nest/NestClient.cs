@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace nest_exporter.Nest;
+namespace NestExporter.Nest;
 
 public class NestClient
 {

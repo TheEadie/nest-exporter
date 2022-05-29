@@ -3,10 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using nest_exporter.Nest;
+using NestExporter.Nest;
 using Prometheus;
 
-namespace nest_exporter.Services;
+namespace NestExporter.Services;
 
 internal class ThermostatCollector : IThermostatCollector
 {
