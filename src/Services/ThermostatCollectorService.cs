@@ -1,29 +1,28 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace nest_exporter.Services
+namespace nest_exporter.Services;
+
+public class ThermostatCollectorService : BackgroundService
 {
-    public class ThermostatCollectorService : BackgroundService
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<ThermostatCollectorService> _logger;
+
+    public ThermostatCollectorService(IServiceProvider serviceProvider, ILogger<ThermostatCollectorService> logger)
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<ThermostatCollectorService> _logger;
+        _serviceProvider = serviceProvider;
+        _logger = logger;
+    }
 
-        public ThermostatCollectorService(IServiceProvider serviceProvider, ILogger<ThermostatCollectorService> logger)
-        {
-            _serviceProvider = serviceProvider;
-            _logger = logger;
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            _logger.LogInformation("Running service");
-            using var scope = _serviceProvider.CreateScope();
-            var service = scope.ServiceProvider.GetRequiredService<IThermostatCollector>();
-            await service.Monitor(stoppingToken);
-        }
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("Running service");
+        using var scope = _serviceProvider.CreateScope();
+        var service = scope.ServiceProvider.GetRequiredService<IThermostatCollector>();
+        await service.Monitor(stoppingToken);
     }
 }
