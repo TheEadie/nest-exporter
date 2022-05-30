@@ -29,7 +29,7 @@ public class Startup
                 _ = endpoints.MapMetrics();
                 _ = endpoints.MapGet(
                     "/",
-                     async context => await context.Response.WriteAsync("Hello World!"));
+                     async context => await context.Response.WriteAsync("Hello World!").ConfigureAwait(false));
             });
     }
 }

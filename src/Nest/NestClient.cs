@@ -37,7 +37,7 @@ public class NestClient
 
     public async Task<ThermostatInfo> GetThermostatInfo()
     {
-        var result = await CallNestApi<DevicesResponse>($"v1/enterprises/{_projectId}/devices");
+        var result = await CallNestApi<DevicesResponse>($"v1/enterprises/{_projectId}/devices").ConfigureAwait(false);
 
         var thermostat = result.Devices.First();
         return new ThermostatInfo(thermostat.Traits.Info.Name,
@@ -53,14 +53,14 @@ public class NestClient
         httpClient.BaseAddress = new Uri("https://smartdevicemanagement.googleapis.com/");
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
 
-        var response = await httpClient.GetAsync(requestUri);
+        var response = await httpClient.GetAsync(requestUri).ConfigureAwait(false);
 
         if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
             // Retry with newer access token
-            await RefreshAccessToken();
+            await RefreshAccessToken().ConfigureAwait(false);
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-            response = await httpClient.GetAsync(requestUri);
+            response = await httpClient.GetAsync(requestUri).ConfigureAwait(false);
         }
 
         if (!response.IsSuccessStatusCode)
@@ -68,8 +68,8 @@ public class NestClient
             throw new Exception($"Failed to get info from Nest API. Response: {response.StatusCode}");
         }
 
-        await using var stream = await response.Content.ReadAsStreamAsync();
-        var result = await JsonSerializer.DeserializeAsync<T>(stream);
+        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        var result = await JsonSerializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
         return result;
     }
 
@@ -84,12 +84,13 @@ public class NestClient
             $"client_secret={_clientSecret}&" +
             $"refresh_token={_refreshToken}&" +
             "grant_type=refresh_token",
-            null);
+            null)
+            .ConfigureAwait(false);
 
         if (response.IsSuccessStatusCode)
         {
-            await using var stream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<RefreshAccessTokenResponse>(stream);
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<RefreshAccessTokenResponse>(stream).ConfigureAwait(false);
             _accessToken = result.AccessToken;
         }
         else

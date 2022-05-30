@@ -51,7 +51,7 @@ internal class ThermostatCollector : IThermostatCollector
             {
                 _logger.LogInformation("Calling Nest API to update stats");
 
-                var thermostatInfo = await _nestClient.GetThermostatInfo();
+                var thermostatInfo = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
                 ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
                 TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
                 Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
@@ -67,7 +67,7 @@ internal class ThermostatCollector : IThermostatCollector
                             thermostatInfo.Humidity,
                             thermostatInfo.TargetTemp);
 
-                await Task.Delay(60000, cancellationToken);
+                await Task.Delay(60000, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {

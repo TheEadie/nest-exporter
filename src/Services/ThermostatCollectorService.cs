@@ -23,6 +23,6 @@ public class ThermostatCollectorService : BackgroundService
         _logger.LogInformation("Running service");
         using var scope = _serviceProvider.CreateScope();
         var service = scope.ServiceProvider.GetRequiredService<IThermostatCollector>();
-        await service.Monitor(stoppingToken);
+        await service.Monitor(stoppingToken).ConfigureAwait(false);
     }
 }
