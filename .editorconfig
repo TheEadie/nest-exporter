@@ -150,3 +150,6 @@ csharp_style_namespace_declarations = file_scoped
 # Default severity for analyzer diagnostics with category 'Style' (escalated to build warnings)
 dotnet_analyzer_diagnostic.category-Style.severity = warning
 
+# CA1812 is flagged for all internal classes used in DI or Serialization
+dotnet_diagnostic.CA1812.severity = none
+
