@@ -37,7 +37,8 @@ public class NestClient
 
     public async Task<ThermostatInfo> GetThermostatInfo()
     {
-        var result = await CallNestApi<DevicesResponse>($"v1/enterprises/{_projectId}/devices").ConfigureAwait(false);
+        var result = await CallNestApi<DevicesResponse>(new Uri($"v1/enterprises/{_projectId}/devices"))
+                        .ConfigureAwait(false);
 
         var thermostat = result.Devices.First();
         return new ThermostatInfo(thermostat.Traits.Info.Name,
@@ -47,9 +48,9 @@ public class NestClient
             thermostat.Traits.Hvac.Status);
     }
 
-    private async Task<T> CallNestApi<T>(string requestUri)
+    private async Task<T> CallNestApi<T>(Uri requestUri)
     {
-        var httpClient = _clientFactory.CreateClient();
+        using var httpClient = _clientFactory.CreateClient();
         httpClient.BaseAddress = new Uri("https://smartdevicemanagement.googleapis.com/");
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
 
@@ -75,15 +76,15 @@ public class NestClient
 
     private async Task RefreshAccessToken()
     {
-        var httpClient = _clientFactory.CreateClient();
+        using var httpClient = _clientFactory.CreateClient();
         httpClient.BaseAddress = new Uri("https://www.googleapis.com/");
 
-        var response = await httpClient.PostAsync(
+        var response = await httpClient.PostAsync(new Uri(
             "oauth2/v4/token?" +
             $"client_id={_clientId}&" +
             $"client_secret={_clientSecret}&" +
             $"refresh_token={_refreshToken}&" +
-            "grant_type=refresh_token",
+            "grant_type=refresh_token"),
             null)
             .ConfigureAwait(false);
 
