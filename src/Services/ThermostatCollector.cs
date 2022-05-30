@@ -1,4 +1,5 @@
-using System;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -69,9 +70,13 @@ internal class ThermostatCollector : IThermostatCollector
 
                 await Task.Delay(60000, cancellationToken).ConfigureAwait(false);
             }
-            catch (Exception exception)
+            catch (JsonException exception)
             {
-                _logger.LogError("Error calling Nest API", exception);
+                _logger.LogError("Error calling Nest API. Couldn't deserialise response", exception);
+            }
+            catch (HttpRequestException exception)
+            {
+                _logger.LogError("Error calling Nest API. Issue calling HTTP API", exception);
             }
         }
     }

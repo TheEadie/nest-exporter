@@ -64,10 +64,7 @@ public class NestClient
             response = await httpClient.GetAsync(requestUri).ConfigureAwait(false);
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Failed to get info from Nest API. Response: {response.StatusCode}");
-        }
+        _ = response.EnsureSuccessStatusCode();
 
         using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         var result = await JsonSerializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
