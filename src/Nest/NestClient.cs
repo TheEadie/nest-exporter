@@ -37,7 +37,7 @@ public class NestClient
 
     public async Task<ThermostatInfo> GetThermostatInfo()
     {
-        var result = await CallNestApi<DevicesResponse>(new Uri($"v1/enterprises/{_projectId}/devices"))
+        var result = await CallNestApi<DevicesResponse>(new Uri($"v1/enterprises/{_projectId}/devices", UriKind.Relative))
                         .ConfigureAwait(false);
 
         var thermostat = result.Devices.First();
@@ -81,7 +81,8 @@ public class NestClient
             $"client_id={_clientId}&" +
             $"client_secret={_clientSecret}&" +
             $"refresh_token={_refreshToken}&" +
-            "grant_type=refresh_token"),
+            "grant_type=refresh_token",
+            UriKind.Relative),
             null)
             .ConfigureAwait(false);
 
