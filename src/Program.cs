@@ -19,7 +19,7 @@ public static class Program
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
         return Host.CreateDefaultBuilder(args)
-            .ConfigureLogging(logging => logging.AddConsole())
+            .ConfigureLogging(logging => logging.AddConsole().AddJsonConsole())
             .ConfigureAppConfiguration((_, config) => config.AddEnvironmentVariables(prefix: "NestExporter_"))
             .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
             .ConfigureServices(services =>
