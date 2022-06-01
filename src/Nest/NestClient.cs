@@ -67,8 +67,8 @@ public class NestClient
         _ = response.EnsureSuccessStatusCode();
 
         using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        var result = await JsonSerializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
-        return result;
+        var result = await JsonSerializer.DeserializeAsync(stream, typeof(T), JsonContext.Default).ConfigureAwait(false);
+        return (T) result;
     }
 
     private async Task RefreshAccessToken()
@@ -89,7 +89,7 @@ public class NestClient
         if (response.IsSuccessStatusCode)
         {
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            var result = await JsonSerializer.DeserializeAsync<RefreshAccessTokenResponse>(stream).ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync(stream, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
             _accessToken = result.AccessToken;
         }
         else
