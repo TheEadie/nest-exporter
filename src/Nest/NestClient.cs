@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -7,95 +7,94 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace nest_exporter.Nest
+namespace NestExporter.Nest;
+
+public class NestClient
 {
-    public class NestClient
+    private readonly IHttpClientFactory _clientFactory;
+    private readonly ILogger<NestClient> _logger;
+
+    private string _clientId = "";
+    private string _clientSecret = "";
+    private string _projectId = "";
+
+    private string _refreshToken = "";
+    private string _accessToken;
+
+    public NestClient(IHttpClientFactory clientFactory, ILogger<NestClient> logger)
     {
-        private readonly IHttpClientFactory _clientFactory;
-        private readonly ILogger<NestClient> _logger;
+        _clientFactory = clientFactory;
+        _logger = logger;
+    }
 
-        private string _clientId = "";
-        private string _clientSecret = "";
-        private string _projectId = "";
+    public void Configure(string clientId, string clientSecret, string projectId, string refreshToken)
+    {
+        _clientId = clientId;
+        _clientSecret = clientSecret;
+        _projectId = projectId;
+        _refreshToken = refreshToken;
+    }
 
-        private string _refreshToken = "";
-        private string _accessToken;
+    public async Task<ThermostatInfo> GetThermostatInfo()
+    {
+        var result = await CallNestApi<DevicesResponse>(new Uri($"v1/enterprises/{_projectId}/devices", UriKind.Relative))
+                        .ConfigureAwait(false);
 
-        public NestClient(IHttpClientFactory clientFactory, ILogger<NestClient> logger)
+        var thermostat = result.Devices.First();
+        return new ThermostatInfo(thermostat.Traits.Info.Name,
+            thermostat.Traits.Temperature.ActualTemperatureCelsius,
+            thermostat.Traits.TargetTemperature.TargetTemperatureCelsius,
+            thermostat.Traits.Humidity.HumidityPercent,
+            thermostat.Traits.Hvac.Status);
+    }
+
+    private async Task<T> CallNestApi<T>(Uri requestUri)
+    {
+        using var httpClient = _clientFactory.CreateClient();
+        httpClient.BaseAddress = new Uri("https://smartdevicemanagement.googleapis.com/");
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+
+        var response = await httpClient.GetAsync(requestUri).ConfigureAwait(false);
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
-            _clientFactory = clientFactory;
-            _logger = logger;
-        }
-
-        public void Configure(string clientId, string clientSecret, string projectId, string refreshToken)
-        {
-            _clientId = clientId;
-            _clientSecret = clientSecret;
-            _projectId = projectId;
-            _refreshToken = refreshToken;
-        }
-
-        public async Task<ThermostatInfo> GetThermostatInfo()
-        {
-            var result = await CallNestApi<DevicesResponse>($"v1/enterprises/{_projectId}/devices");
-
-            var thermostat = result.Devices.First();
-            return new ThermostatInfo(thermostat.Traits.Info.Name,
-                thermostat.Traits.Temperature.ActualTemperatureCelsius,
-                thermostat.Traits.TargetTemperature.TargetTemperatureCelsius,
-                thermostat.Traits.Humidity.HumidityPercent,
-                thermostat.Traits.Hvac.Status);
-        }
-
-        private async Task<T> CallNestApi<T>(string requestUri)
-        {
-            var httpClient = _clientFactory.CreateClient();
-            httpClient.BaseAddress = new Uri("https://smartdevicemanagement.googleapis.com/");
+            // Retry with newer access token
+            await RefreshAccessToken().ConfigureAwait(false);
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-
-            var response = await httpClient.GetAsync(requestUri);
-
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Retry with newer access token
-                await RefreshAccessToken();
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-                response = await httpClient.GetAsync(requestUri);
-            }
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Failed to get info from Nest API. Response: {response.StatusCode}");
-            }
-
-            await using var stream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<T>(stream);
-            return result;
+            response = await httpClient.GetAsync(requestUri).ConfigureAwait(false);
         }
 
-        private async Task RefreshAccessToken()
+        _ = response.EnsureSuccessStatusCode();
+
+        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        var result = await JsonSerializer.DeserializeAsync(stream, typeof(T), JsonContext.Default).ConfigureAwait(false);
+        return (T) result;
+    }
+
+    private async Task RefreshAccessToken()
+    {
+        using var httpClient = _clientFactory.CreateClient();
+        httpClient.BaseAddress = new Uri("https://www.googleapis.com/");
+
+        var response = await httpClient.PostAsync(new Uri(
+            "oauth2/v4/token?" +
+            $"client_id={_clientId}&" +
+            $"client_secret={_clientSecret}&" +
+            $"refresh_token={_refreshToken}&" +
+            "grant_type=refresh_token",
+            UriKind.Relative),
+            null)
+            .ConfigureAwait(false);
+
+        if (response.IsSuccessStatusCode)
         {
-            var httpClient = _clientFactory.CreateClient();
-            httpClient.BaseAddress = new Uri("https://www.googleapis.com/");
-
-            var response = await httpClient.PostAsync(
-                "oauth2/v4/token?" +
-                $"client_id={_clientId}&" +
-                $"client_secret={_clientSecret}&" +
-                $"refresh_token={_refreshToken}&" +
-                $"grant_type=refresh_token",
-                null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                await using var stream = await response.Content.ReadAsStreamAsync();
-                var result = await JsonSerializer.DeserializeAsync<RefreshAccessTokenResponse>(stream);
-                _accessToken = result.AccessToken;
-            }
-            else
-            {
-                _logger.LogError("Failed to update access token");
-            }
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync(stream, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
+            _accessToken = result.AccessToken;
+        }
+        else
+        {
+            _logger.LogError("Failed to update access token");
         }
     }
 }

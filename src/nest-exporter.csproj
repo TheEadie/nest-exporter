@@ -2,8 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>nest_exporter</RootNamespace>
-    <UserSecretsId>f9dfba6b-bc35-43f9-bfb3-0bd83116bbb4</UserSecretsId>
+    <RootNamespace>NestExporter</RootNamespace>
+    <AnalysisLevel>latest-All</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <TrimmerDefaultAction>link</TrimmerDefaultAction>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />

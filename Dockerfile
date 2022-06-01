@@ -24,7 +24,7 @@ COPY src/*.csproj ./
 RUN dotnet restore --runtime alpine-"$(cat RID)"
 
 # Copy everything else and build
-COPY src/ ./
+COPY src/ .editorconfig ./
 ARG VERSION=0.0.1
 RUN dotnet publish \
         -c Release \
@@ -33,6 +33,8 @@ RUN dotnet publish \
         -p:PublishTrimmed=true \
         -p:AssemblyVersion=${VERSION} \
         -p:Version=${VERSION} \
+        -p:TreatWarningsAsErrors=true \
+        -p:WarningsNotAsErrors=IL2104 \
         -o out \
         --no-restore
 

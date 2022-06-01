@@ -1,10 +1,9 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace nest_exporter.Services
+namespace NestExporter.Services;
+
+internal interface IThermostatCollector
 {
-    internal interface IThermostatCollector
-    {
-        Task Monitor(CancellationToken cancellationToken);
-    }
+    Task Monitor(CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -5,41 +6,31 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using nest_exporter.Nest;
-using nest_exporter.Services;
+using NestExporter.Nest;
+using NestExporter.Services;
 
-namespace nest_exporter
+[assembly: CLSCompliant(false)]
+namespace NestExporter;
+
+public static class Program
 {
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+    public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
 
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging =>
-                {
-                    logging.AddConsole();
-                })
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config.AddEnvironmentVariables(prefix: "NestExporter_");
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
-                .ConfigureServices(services =>
-                {
-                    services.AddLogging();
-                    services.AddHttpClient();
+    private static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .ConfigureLogging(logging => logging.AddConsole().AddJsonConsole())
+            .ConfigureAppConfiguration((_, config) => config.AddEnvironmentVariables(prefix: "NestExporter_"))
+            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+            .ConfigureServices(services =>
+            {
+                _ = services.AddLogging()
+                    .AddHttpClient()
                     // Remove logging from httpclient as it prints every request to info
-                    services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
-                    services.AddHostedService<ThermostatCollectorService>();
-                    services.AddScoped<IThermostatCollector, ThermostatCollector>();
-                    services.AddScoped<NestClient>();
-                });
+                    .RemoveAll<IHttpMessageHandlerBuilderFilter>()
+                    .AddHostedService<ThermostatCollectorService>()
+                    .AddScoped<IThermostatCollector, ThermostatCollector>()
+                    .AddScoped<NestClient>();
+            });
     }
 }
