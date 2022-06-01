@@ -6,6 +6,7 @@
     <AnalysisLevel>latest-All</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <TrimmerDefaultAction>link</TrimmerDefaultAction>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />
