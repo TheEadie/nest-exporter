@@ -33,6 +33,8 @@ RUN dotnet publish \
         -p:PublishTrimmed=true \
         -p:AssemblyVersion=${VERSION} \
         -p:Version=${VERSION} \
+        -p:TreatWarningsAsErrors=true \
+        -p:WarningsNotAsErrors=IL2104 \
         -o out \
         --no-restore
 
