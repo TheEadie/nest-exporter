@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using NestExporter.Nest;
 using NestExporter.Services;
 
+[assembly: CLSCompliant(false)]
 namespace NestExporter;
 
 public static class Program
