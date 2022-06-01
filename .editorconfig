@@ -152,4 +152,7 @@ dotnet_analyzer_diagnostic.category-Style.severity = warning
 
 # CA1812 is flagged for all internal classes used in DI or Serialization
 dotnet_diagnostic.CA1812.severity = none
+# CA1848 requires a lot of code to specify Log Messages. Should only be needed in high perf
+dotnet_diagnostic.CA1848.severity = none
+
 
