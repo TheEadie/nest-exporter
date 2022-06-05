@@ -41,13 +41,10 @@ version:
 lint: | lint-dockerfile lint-sh
 
 lint-dockerfile:
-	@docker buildx build . \
-		--target lint-dockerfile
+	@docker run --rm -i hadolint/hadolint:2.10.0 < Dockerfile
 
 lint-sh:
-	@docker buildx build . \
-		--target lint-sh
-
+	@docker run --rm -v "$(PWD):/mnt" koalaman/shellcheck:v0.8.0 **/*.sh
 
 ## Release
 release: | docker-push github-release
