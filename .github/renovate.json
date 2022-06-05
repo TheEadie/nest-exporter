@@ -1,4 +1,14 @@
 {
     "extends": ["config:base"],
-    "masterIssue": true
+    "masterIssue": true,
+
+    "regexManagers": [
+        {
+            "fileMatch": ["^makefile$"],
+            "matchStrings": [
+                "docker run.* (?<depName>.*?):(?<currentValue>.*?)( |\\n)"
+            ],
+            "datasourceTemplate": "docker"
+        }
+    ]
 }
