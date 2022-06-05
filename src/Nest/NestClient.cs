@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace NestExporter.Nest;
 
-public class NestClient
+internal class NestClient : INestClient
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly ILogger<NestClient> _logger;

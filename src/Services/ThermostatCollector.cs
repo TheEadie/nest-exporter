@@ -29,10 +29,10 @@ internal class ThermostatCollector : IThermostatCollector
         Metrics.CreateGauge("nest_thermostat_status", "0 if the heating is off, 1 if it is on", Labels);
 
     private readonly ILogger<ThermostatCollector> _logger;
-    private readonly NestClient _nestClient;
+    private readonly INestClient _nestClient;
     private readonly IConfiguration _configuration;
 
-    public ThermostatCollector(NestClient nestClient, IConfiguration configuration, ILogger<ThermostatCollector> logger)
+    public ThermostatCollector(INestClient nestClient, IConfiguration configuration, ILogger<ThermostatCollector> logger)
     {
         _logger = logger;
         _nestClient = nestClient;
