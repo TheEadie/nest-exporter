@@ -41,7 +41,7 @@ version:
 lint: | lint-dockerfile lint-sh
 
 lint-dockerfile:
-	@docker run --rm -i hadolint/hadolint:2.9.1 < Dockerfile
+	@docker run --rm -i hadolint/hadolint:v2.10.0 < Dockerfile
 
 lint-sh:
 	@docker run --rm -v "$(PWD):/mnt" koalaman/shellcheck:v0.7.0 **/*.sh
