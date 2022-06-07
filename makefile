@@ -1,15 +1,15 @@
-IMAGE_NAME = theeadie/nest-exporter
-PLATFORMS = linux/amd64,linux/arm64
-NEXT_VERSION = 0.2
-TAG_PREFIX = 
+IMAGE_NAME := theeadie/nest-exporter
+PLATFORMS := linux/amd64,linux/arm64
+NEXT_VERSION := 0.2
+TAG_PREFIX := 
 
-GITHUB_REPO = theeadie/nest-exporter
-GITHUB_AUTH_TOKEN = empty
+GITHUB_REPO := theeadie/nest-exporter
+GITHUB_AUTH_TOKEN := empty
 
-VERSION = $(shell ./build/version.sh $(NEXT_VERSION))
-VERSION_MAJOR = $(word 1,$(subst ., ,$(VERSION)))
-VERSION_MINOR = $(word 2,$(subst ., ,$(VERSION)))
-VERSION_PATCH = $(word 2,$(subst ., ,$(VERSION)))
+VERSION := $(shell ./build/version.sh $(NEXT_VERSION))
+VERSION_MAJOR := $(word 1,$(subst ., ,$(VERSION)))
+VERSION_MINOR := $(word 2,$(subst ., ,$(VERSION)))
+VERSION_PATCH := $(word 2,$(subst ., ,$(VERSION)))
 
 .PHONY: default build
 
