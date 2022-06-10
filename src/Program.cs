@@ -26,7 +26,6 @@ public static class Program
             {
                 _ = services.AddLogging()
                     .AddHttpClient()
-                    // Remove logging from httpclient as it prints every request to info
                     .RemoveAll<IHttpMessageHandlerBuilderFilter>()
                     .AddHostedService<ThermostatCollectorService>()
                     .AddScoped<IThermostatCollector, ThermostatCollector>()

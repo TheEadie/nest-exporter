@@ -10,52 +10,52 @@ namespace NestExporter.Nest;
 internal class DevicesResponse
 {
     [JsonPropertyName("devices")]
-    public IEnumerable<DeviceResponse> Devices { get; set; }
+    public IEnumerable<DeviceResponse> Devices { get; set; } = new List<DeviceResponse>(0);
 }
 
 internal class DeviceResponse
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
 
     [JsonPropertyName("assignee")]
-    public string Assignee { get; set; }
+    public string Assignee { get; set; } = string.Empty;
 
     [JsonPropertyName("traits")]
-    public TraitResponse Traits { get; set; }
+    public TraitResponse Traits { get; set; } = new();
 }
 
 internal class TraitResponse
 {
     [JsonPropertyName("sdm.devices.traits.Info")]
-    public TraitInfo Info { get; set; }
+    public TraitInfo Info { get; set; } = new();
 
     [JsonPropertyName("sdm.devices.traits.Temperature")]
-    public TraitTemperature Temperature { get; set; }
+    public TraitTemperature Temperature { get; set; } = new();
 
     [JsonPropertyName("sdm.devices.traits.Humidity")]
-    public TraitHumidity Humidity { get; set; }
+    public TraitHumidity Humidity { get; set; } = new();
 
     [JsonPropertyName("sdm.devices.traits.ThermostatTemperatureSetpoint")]
-    public TraitTargetTemperature TargetTemperature { get; set; }
+    public TraitTargetTemperature TargetTemperature { get; set; } = new();
 
     [JsonPropertyName("sdm.devices.traits.ThermostatHvac")]
-    public TraitHavc Hvac { get; set; }
+    public TraitHavc Hvac { get; set; } = new();
 }
 
 internal class TraitInfo
 {
     [JsonPropertyName("customName")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
 
 internal class TraitHavc
 {
     [JsonPropertyName("status")]
-    public string Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 }
 
 internal class TraitHumidity

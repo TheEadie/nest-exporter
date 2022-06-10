@@ -19,7 +19,7 @@ public class NestClient
     private string _projectId = "";
 
     private string _refreshToken = "";
-    private string _accessToken;
+    private string _accessToken = "";
 
     public NestClient(IHttpClientFactory clientFactory, ILogger<NestClient> logger)
     {
@@ -66,9 +66,10 @@ public class NestClient
 
         _ = response.EnsureSuccessStatusCode();
 
-        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        var result = await JsonSerializer.DeserializeAsync(stream, typeof(T), JsonContext.Default).ConfigureAwait(false);
-        return (T) result;
+        var streamAsync = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        await using var stream = streamAsync.ConfigureAwait(false);
+        var result = await JsonSerializer.DeserializeAsync(streamAsync, typeof(T), JsonContext.Default).ConfigureAwait(false);
+        return result is null ? throw new JsonException("The API returned success but the JSON response was empty") : (T) result;
     }
 
     private async Task RefreshAccessToken()
@@ -88,8 +89,13 @@ public class NestClient
 
         if (response.IsSuccessStatusCode)
         {
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            var result = await JsonSerializer.DeserializeAsync(stream, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
+            var streamAsync = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            await using var stream = streamAsync.ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync(streamAsync, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
+            if (result is null)
+            {
+                throw new JsonException("The API returned success but the JSON response was empty");
+            }
             _accessToken = result.AccessToken;
         }
         else
