@@ -8,35 +8,29 @@ RUN case ${TARGETPLATFORM} in \
          "linux/arm64")  RID=arm64  ;; \
     esac \
     && echo ${RID} > RID
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-COPY src/*.csproj ./
+COPY *.sln ./
+COPY src/nest-exporter/nest-exporter.csproj ./src/nest-exporter/
 RUN dotnet restore --runtime alpine-"$(cat RID)"
 
-COPY src/ .editorconfig ./
+COPY ./ ./
 ARG VERSION=0.0.1
-RUN dotnet build \
-        -c Release \
-        --runtime alpine-"$(cat RID)" \
-        --self-contained \
-        -p:AssemblyVersion=${VERSION} \
-        -p:Version=${VERSION} \
-        -p:TreatWarningsAsErrors=true \
-        --no-restore
-
-#### Publish ####
-FROM --platform=$BUILDPLATFORM build AS publish
-WORKDIR /app
-
 RUN dotnet publish \
+        "src/nest-exporter/nest-exporter.csproj" \
         -c Release \
         --runtime alpine-"$(cat RID)" \
         --self-contained \
         -p:PublishTrimmed=true \
         -o out \
-        --no-build
+        --no-restore \
+        -p:AssemblyVersion=${VERSION} \
+        -p:Version=${VERSION} \
+        -p:TreatWarningsAsErrors=true \
+        -p:NoWarn=IL2104
 
 #### Runtime ####
 FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.5-alpine3.15@sha256:cecc8d413aea2c5c76fdc92ae8a11492e623b4b8b8090ec942db77550504fce1
 WORKDIR /app
-COPY --from=publish /app/out .
+COPY --from=build /app/out .
 ENTRYPOINT ["./nest-exporter"]
