@@ -12,6 +12,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 COPY *.sln ./
 COPY src/nest-exporter/nest-exporter.csproj ./src/nest-exporter/
+COPY src/nest-exporter.tests/nest-exporter.tests.csproj ./src/nest-exporter.tests/
 RUN dotnet restore --runtime alpine-"$(cat RID)"
 
 COPY ./ ./
