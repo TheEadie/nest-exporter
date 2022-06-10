@@ -42,7 +42,7 @@ build:
 		--cache-to=type=gha,mode=max,scope=build
 
 test: build-local
-	@docker run --rm -i $(IMAGE_NAME):$(VERSION)-build dotnet test --no-build
+	@docker run --rm -i $(IMAGE_NAME):$(VERSION)-build dotnet test
 
 publish:
 	@docker buildx build . \

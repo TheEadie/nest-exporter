@@ -15,7 +15,8 @@ COPY src/nest-exporter/nest-exporter.csproj ./src/nest-exporter/
 COPY src/nest-exporter.tests/nest-exporter.tests.csproj ./src/nest-exporter.tests/
 RUN dotnet restore --runtime alpine-"$(cat RID)"
 
-COPY ./ ./
+COPY .editorconfig ./src/
+COPY src/ ./src/
 ARG VERSION=0.0.1
 RUN dotnet publish \
         "src/nest-exporter/nest-exporter.csproj" \
