@@ -22,6 +22,7 @@ public class MetricsShould
                 _ = builder.ConfigureServices(services =>
                 {
                     _ = services.AddScoped(_ => _httpClientFactory);
+                    _ = services.AddLogging(logging => logging.ClearProviders());
                 });
             });
     }
