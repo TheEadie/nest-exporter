@@ -29,19 +29,19 @@ internal class ThermostatCollector : IThermostatCollector
         Metrics.CreateGauge("nest_thermostat_status", "0 if the heating is off, 1 if it is on", Labels);
 
     private readonly ILogger<ThermostatCollector> _logger;
-    private readonly INestClient _nestClient;
+    private readonly INestClientFactory _nestClientFactory;
     private readonly IConfiguration _configuration;
 
-    public ThermostatCollector(INestClient nestClient, IConfiguration configuration, ILogger<ThermostatCollector> logger)
+    public ThermostatCollector(INestClientFactory nestClientFactory, IConfiguration configuration, ILogger<ThermostatCollector> logger)
     {
         _logger = logger;
-        _nestClient = nestClient;
+        _nestClientFactory = nestClientFactory;
         _configuration = configuration;
     }
 
     public async Task Monitor(CancellationToken cancellationToken)
     {
-        _nestClient.Configure(_configuration["NestApi:ClientId"],
+        var nestClient = _nestClientFactory.Create(_configuration["NestApi:ClientId"],
             _configuration["NestApi:ClientSecret"],
             _configuration["NestApi:ProjectId"],
             _configuration["NestApi:RefreshToken"]);
@@ -52,7 +52,7 @@ internal class ThermostatCollector : IThermostatCollector
             {
                 _logger.LogInformation("Calling Nest API to update stats");
 
-                var thermostatInfo = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
+                var thermostatInfo = await nestClient.GetThermostatInfo().ConfigureAwait(false);
                 ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
                 TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
                 Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);

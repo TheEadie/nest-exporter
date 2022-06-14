@@ -29,7 +29,7 @@ public static class Program
                     .RemoveAll<IHttpMessageHandlerBuilderFilter>()
                     .AddHostedService<ThermostatCollectorService>()
                     .AddScoped<IThermostatCollector, ThermostatCollector>()
-                    .AddScoped<INestClient, NestClient>();
+                    .AddScoped<INestClientFactory, NestClientFactory>();
             });
     }
 }

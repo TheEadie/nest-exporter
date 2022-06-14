@@ -15,9 +15,7 @@ public class ServiceShould
     public void SetUp()
     {
         _httpClientFactory = Substitute.For<IHttpClientFactory>();
-        var logger = Substitute.For<ILogger<NestClient>>();
-
-        _nestClient = new NestClient(_httpClientFactory, logger);
+        _nestClient = new NestClient(_httpClientFactory, "client-id", "client-secret", "project-id", "refresh-token");
     }
 
     [Test]
