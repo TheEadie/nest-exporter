@@ -72,11 +72,11 @@ internal class ThermostatCollector : IThermostatCollector
             }
             catch (JsonException exception)
             {
-                _logger.LogError("Error calling Nest API. Couldn't deserialise response", exception);
+                _logger.LogError(exception, "Error calling Nest API. Couldn't deserialise response");
             }
             catch (HttpRequestException exception)
             {
-                _logger.LogError("Error calling Nest API. Issue calling HTTP API", exception);
+                _logger.LogError(exception, "Error calling Nest API. Issue calling HTTP API");
             }
         }
     }
