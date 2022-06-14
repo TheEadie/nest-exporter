@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using NestExporter.Nest;
 using NSubstitute;
 using Shouldly;

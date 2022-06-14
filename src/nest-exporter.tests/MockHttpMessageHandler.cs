@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace NestExporter.Tests.Nest;
+namespace NestExporter.Tests;
 
 public class MockHttpMessageHandler : HttpMessageHandler
 {
