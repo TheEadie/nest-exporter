@@ -5,30 +5,23 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace NestExporter.Nest;
 
-public class NestClient
+internal class NestClient : INestClient
 {
     private readonly IHttpClientFactory _clientFactory;
-    private readonly ILogger<NestClient> _logger;
 
-    private string _clientId = "";
-    private string _clientSecret = "";
-    private string _projectId = "";
+    private readonly string _clientId;
+    private readonly string _clientSecret;
+    private readonly string _projectId;
 
-    private string _refreshToken = "";
+    private readonly string _refreshToken;
     private string _accessToken = "";
 
-    public NestClient(IHttpClientFactory clientFactory, ILogger<NestClient> logger)
+    public NestClient(IHttpClientFactory clientFactory, string clientId, string clientSecret, string projectId, string refreshToken)
     {
         _clientFactory = clientFactory;
-        _logger = logger;
-    }
-
-    public void Configure(string clientId, string clientSecret, string projectId, string refreshToken)
-    {
         _clientId = clientId;
         _clientSecret = clientSecret;
         _projectId = projectId;
@@ -87,20 +80,14 @@ public class NestClient
             null)
             .ConfigureAwait(false);
 
-        if (response.IsSuccessStatusCode)
+        _ = response.EnsureSuccessStatusCode();
+        var streamAsync = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        await using var stream = streamAsync.ConfigureAwait(false);
+        var result = await JsonSerializer.DeserializeAsync(streamAsync, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
+        if (result is null)
         {
-            var streamAsync = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            await using var stream = streamAsync.ConfigureAwait(false);
-            var result = await JsonSerializer.DeserializeAsync(streamAsync, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
-            if (result is null)
-            {
-                throw new JsonException("The API returned success but the JSON response was empty");
-            }
-            _accessToken = result.AccessToken;
+            throw new JsonException("The API returned success but the JSON response was empty");
         }
-        else
-        {
-            _logger.LogError("Failed to update access token");
-        }
+        _accessToken = result.AccessToken;
     }
 }
