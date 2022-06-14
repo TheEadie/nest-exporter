@@ -1,32 +1,22 @@
-﻿using System.Net;
+using System.Net;
 
 namespace NestExporter.Tests.Nest;
 
 public class MockHttpMessageHandler : HttpMessageHandler
 {
-    private readonly string _response;
-    private readonly HttpStatusCode _statusCode;
+    private readonly Queue<Response> _responses;
 
-    public string Input { get; private set; }
-    public int NumberOfCalls { get; private set; }
+    public MockHttpMessageHandler() =>
+        _responses = new Queue<Response>();
 
-    public MockHttpMessageHandler(string response, HttpStatusCode statusCode)
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        _response = response;
-        _statusCode = statusCode;
+        var response = _responses.Dequeue();
+        return Task.FromResult(new HttpResponseMessage { StatusCode = response.StatusCode, Content = new StringContent(response.Message) });
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-        NumberOfCalls++;
-        if (request?.Content != null) // Could be a GET-request without a body
-        {
-            Input = await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        }
-        return new HttpResponseMessage
-        {
-            StatusCode = _statusCode,
-            Content = new StringContent(_response)
-        };
-    }
+    public void AddResponse(HttpStatusCode statusCode, string message) =>
+        _responses.Enqueue(new Response(statusCode, message));
 }
+
+internal record Response(HttpStatusCode StatusCode, string Message);

@@ -87,20 +87,14 @@ internal class NestClient : INestClient
             null)
             .ConfigureAwait(false);
 
-        if (response.IsSuccessStatusCode)
+        _ = response.EnsureSuccessStatusCode();
+        var streamAsync = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        await using var stream = streamAsync.ConfigureAwait(false);
+        var result = await JsonSerializer.DeserializeAsync(streamAsync, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
+        if (result is null)
         {
-            var streamAsync = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            await using var stream = streamAsync.ConfigureAwait(false);
-            var result = await JsonSerializer.DeserializeAsync(streamAsync, JsonContext.Default.RefreshAccessTokenResponse).ConfigureAwait(false);
-            if (result is null)
-            {
-                throw new JsonException("The API returned success but the JSON response was empty");
-            }
-            _accessToken = result.AccessToken;
+            throw new JsonException("The API returned success but the JSON response was empty");
         }
-        else
-        {
-            _logger.LogError("Failed to update access token");
-        }
+        _accessToken = result.AccessToken;
     }
 }
