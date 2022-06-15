@@ -1,5 +1,5 @@
 #### Build ####
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0.300@sha256:58a93345aa1069d69f4e32eded710dcf5cd563171226fbce69e65b1e98b5e5a5 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0.301@sha256:09c76ca233d3a413fd72bd0bc8c342ed12a8b55f1cc29ac455c049db93632712 AS build
 WORKDIR /app
 
 ARG TARGETPLATFORM
@@ -32,7 +32,7 @@ RUN dotnet publish \
         -p:NoWarn=IL2104
 
 #### Runtime ####
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.5-alpine3.15@sha256:cecc8d413aea2c5c76fdc92ae8a11492e623b4b8b8090ec942db77550504fce1
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.6-alpine3.15@sha256:04229238e8d4c7fd1a00ff93c0fae695da67e18e072446cef5a8c515ff250434
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["./nest-exporter"]
