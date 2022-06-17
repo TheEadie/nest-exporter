@@ -75,7 +75,7 @@ internal class ThermostatCollector : IThermostatCollector
                             thermostatInfo.Name,
                             thermostatInfo.ConnectionStatus,
                             thermostatInfo.HeatingStatus,
-                            thermostatInfo.EcoMode ? "ON" : "OFF",
+                            thermostatInfo.EcoMode ? "On" : "Off",
                             thermostatInfo.ActualTemp,
                             thermostatInfo.Humidity,
                             thermostatInfo.TargetTemp);
