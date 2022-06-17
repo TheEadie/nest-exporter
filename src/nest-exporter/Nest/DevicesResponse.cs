@@ -50,6 +50,9 @@ internal class TraitResponse
 
     [JsonPropertyName("sdm.devices.traits.ThermostatMode")]
     public TraitThermostatMode ThermostatMode { get; set; } = new();
+
+    [JsonPropertyName("sdm.devices.traits.ThermostatEco")]
+    public TraitEco Eco { get; set; } = new();
 }
 
 internal class TraitConnectivity
@@ -59,6 +62,12 @@ internal class TraitConnectivity
 }
 
 internal class TraitThermostatMode
+{
+    [JsonPropertyName("mode")]
+    public string Mode { get; set; } = string.Empty;
+}
+
+internal class TraitEco
 {
     [JsonPropertyName("mode")]
     public string Mode { get; set; } = string.Empty;

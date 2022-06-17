@@ -40,6 +40,7 @@ internal class NestClient : INestClient
             thermostat.Traits.Humidity.HumidityPercent,
             thermostat.Traits.Hvac.Status,
             thermostat.Traits.ThermostatMode.Mode,
+            thermostat.Traits.Eco.Mode == "MANUAL_ECO",
             thermostat.Traits.Connectivity.Status);
     }
 

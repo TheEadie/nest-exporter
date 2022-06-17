@@ -173,6 +173,28 @@ public class ServiceShould
     }
 
     [Test]
+    public async Task ReturnIfInEcoModeWhenReceivedFromNest()
+    {
+        using var message = new MockHttpMessageHandler();
+        message.AddResponse(HttpStatusCode.OK,
+            @"{
+        ""devices"": [
+        {
+            ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""traits"" : {
+                ""sdm.devices.traits.ThermostatEco"" : {
+                    ""mode"" : ""MANUAL_ECO""
+                }
+            }
+        }]}");
+        using var httpClient = new HttpClient(message);
+        _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+
+        var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
+        result.EcoMode.ShouldBe(true);
+    }
+
+    [Test]
     public async Task ThrowExceptionWhenNestApiErrors()
     {
         using var message = new MockHttpMessageHandler();
