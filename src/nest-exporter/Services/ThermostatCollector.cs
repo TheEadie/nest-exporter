@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -58,7 +59,9 @@ internal class ThermostatCollector : IThermostatCollector
             {
                 _logger.LogInformation("Calling Nest API to update stats");
 
-                var thermostatInfo = await nestClient.GetThermostatInfo().ConfigureAwait(false);
+                var thermostats = await nestClient.GetThermostatInfo().ConfigureAwait(false);
+                var thermostatInfo = thermostats.First();
+
                 ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
                 TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
                 Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
