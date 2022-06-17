@@ -4,10 +4,10 @@ changelog:
   categories:
     - title: Breaking Changes 🔨
       labels:
-        - breaking-change
+        - breaking change
     - title: New Features 🎉
       labels:
-        - new-feature
+        - new feature
     - title: Bug Fixes 🐛
       labels:
         - bug
