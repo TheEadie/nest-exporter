@@ -31,6 +31,9 @@ internal class ThermostatCollector : IThermostatCollector
     private static readonly Gauge ConnectionStatus =
         Metrics.CreateGauge("nest_thermostat_connection_status", "0 if the thermostat is offline, 1 if it is online", Labels);
 
+    private static readonly Gauge RequestedMode =
+        Metrics.CreateGauge("nest_thermostat_requested_mode", "0 if the system should be off, 1 if it should be heating", Labels);
+
     private readonly ILogger<ThermostatCollector> _logger;
     private readonly INestClientFactory _nestClientFactory;
     private readonly IConfiguration _configuration;
@@ -61,15 +64,17 @@ internal class ThermostatCollector : IThermostatCollector
                 Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
                 Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.HeatingStatus == "OFF" ? 0 : 1);
                 ConnectionStatus.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ConnectionStatus == "ONLINE" ? 1 : 0);
+                RequestedMode.WithLabels(thermostatInfo.Name).Set(thermostatInfo.RequestedMode == "OFF" ? 0 : 1);
 
                 _logger.LogInformation("{Name}: " +
                             "Thermostat is {ConnectionStatus}. " +
-                            "Central heating is {Status}. " +
+                            "Central heating is {Status} requested to be {RequestedMode}. " +
                             "It is currently {ActualTemp}C, {Humidity}% humidity. " +
                             "Target is {TargetTemp}c",
                             thermostatInfo.Name,
                             thermostatInfo.ConnectionStatus,
                             thermostatInfo.HeatingStatus,
+                            thermostatInfo.RequestedMode,
                             thermostatInfo.ActualTemp,
                             thermostatInfo.Humidity,
                             thermostatInfo.TargetTemp);
