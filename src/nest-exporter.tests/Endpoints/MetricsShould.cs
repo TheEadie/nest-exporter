@@ -36,6 +36,7 @@ public class MetricsShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"": {
                 ""sdm.devices.traits.Info"" : {
                     ""customName"" : ""My device""

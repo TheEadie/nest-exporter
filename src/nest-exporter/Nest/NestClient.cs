@@ -33,7 +33,7 @@ internal class NestClient : INestClient
         var result = await CallNestApi<DevicesResponse>(new Uri($"v1/enterprises/{_projectId}/devices", UriKind.Relative))
                         .ConfigureAwait(false);
 
-        var thermostat = result.Devices.First();
+        var thermostat = result.Devices.Where(x => x.Type == "sdm.devices.types.THERMOSTAT").First();
 
         var ecoMode = thermostat.Traits.Eco.Mode == "MANUAL_ECO";
         var targetTemperature = ecoMode

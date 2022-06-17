@@ -27,6 +27,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"": {
                 ""sdm.devices.traits.Info"" : {
                     ""customName"" : ""My device""
@@ -49,6 +50,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Temperature"" : {
                     ""ambientTemperatureCelsius"" : 23.0
@@ -71,6 +73,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Humidity"" : {
                     ""ambientHumidityPercent"" : 35.0
@@ -93,6 +96,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatTemperatureSetpoint"" : {
                     ""heatCelsius"" : 23.0
@@ -115,6 +119,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatHvac"" : {
                     ""status"" : ""HEATING""
@@ -137,6 +142,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatHvac"" : {
                     ""status"" : ""OFF""
@@ -159,6 +165,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Connectivity"" : {
                     ""status"" : ""ONLINE""
@@ -181,6 +188,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Connectivity"" : {
                     ""status"" : ""OFFLINE""
@@ -203,6 +211,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatEco"" : {
                     ""mode"" : ""MANUAL_ECO""
@@ -225,6 +234,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatTemperatureSetpoint"" : {
                     ""heatCelsius"" : 23.0
@@ -276,6 +286,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Temperature"" : {
                     ""ambientTemperatureCelsius"" : 23.0
