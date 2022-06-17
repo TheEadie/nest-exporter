@@ -28,6 +28,12 @@ internal class ThermostatCollector : IThermostatCollector
     private static readonly Gauge Status =
         Metrics.CreateGauge("nest_thermostat_status", "0 if the heating is off, 1 if it is on", Labels);
 
+    private static readonly Gauge ConnectionStatus =
+        Metrics.CreateGauge("nest_thermostat_connection_status", "0 if the thermostat is offline, 1 if it is online", Labels);
+
+    private static readonly Gauge EcoMode =
+        Metrics.CreateGauge("nest_thermostat_eco_mode", "0 if ECO mode is off, 1 if ECO mode is on", Labels);
+
     private readonly ILogger<ThermostatCollector> _logger;
     private readonly INestClientFactory _nestClientFactory;
     private readonly IConfiguration _configuration;
@@ -56,14 +62,20 @@ internal class ThermostatCollector : IThermostatCollector
                 ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
                 TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
                 Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
-                Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Status == "OFF" ? 0 : 1);
+                Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.HeatingStatus == HeatingStatus.Off ? 0 : 1);
+                ConnectionStatus.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ConnectionStatus == Nest.ConnectionStatus.Offline ? 0 : 1);
+                EcoMode.WithLabels(thermostatInfo.Name).Set(thermostatInfo.EcoMode ? 1 : 0);
 
                 _logger.LogInformation("{Name}: " +
+                            "Thermostat is {ConnectionStatus}. " +
                             "Central heating is {Status}. " +
+                            "Eco mode is {EcoMode}. " +
                             "It is currently {ActualTemp}C, {Humidity}% humidity. " +
                             "Target is {TargetTemp}c",
                             thermostatInfo.Name,
-                            thermostatInfo.Status,
+                            thermostatInfo.ConnectionStatus,
+                            thermostatInfo.HeatingStatus,
+                            thermostatInfo.EcoMode ? "On" : "Off",
                             thermostatInfo.ActualTemp,
                             thermostatInfo.Humidity,
                             thermostatInfo.TargetTemp);

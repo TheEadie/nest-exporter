@@ -6,10 +6,13 @@ The following metrics are exported
 
 | Metric | Description |
 | --- | ----------- |
+| nest_thermostat_connection_status | 0 if the thermostat is offline, 1 if it is online |
 | nest_thermostat_status | 0 if the heating is off, 1 if it is on |
+| nest_thermostat_eco_mode | 0 if the thermostat is not in eco mode, 1 if it is in eco mode |
 | nest_thermostat_actual_temperature | The actual temperature in the room (C) |
 | nest_thermostat_target_temperature | The target temperature for the room (C) |
 | nest_thermostat_humidity | The humidity in the room (%) |
+
 
 ## How to use
 

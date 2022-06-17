@@ -44,6 +44,36 @@ internal class TraitResponse
 
     [JsonPropertyName("sdm.devices.traits.ThermostatHvac")]
     public TraitHavc Hvac { get; set; } = new();
+
+    [JsonPropertyName("sdm.devices.traits.Connectivity")]
+    public TraitConnectivity Connectivity { get; set; } = new();
+
+    [JsonPropertyName("sdm.devices.traits.ThermostatMode")]
+    public TraitThermostatMode ThermostatMode { get; set; } = new();
+
+    [JsonPropertyName("sdm.devices.traits.ThermostatEco")]
+    public TraitEco Eco { get; set; } = new();
+}
+
+internal class TraitConnectivity
+{
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = string.Empty;
+}
+
+internal class TraitThermostatMode
+{
+    [JsonPropertyName("mode")]
+    public string Mode { get; set; } = string.Empty;
+}
+
+internal class TraitEco
+{
+    [JsonPropertyName("mode")]
+    public string Mode { get; set; } = string.Empty;
+
+    [JsonPropertyName("heatCelsius")]
+    public double TargetTemperatureCelsius { get; set; }
 }
 
 internal class TraitInfo
