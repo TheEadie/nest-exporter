@@ -51,6 +51,9 @@ public class MetricsShould
                 },
                 ""sdm.devices.traits.ThermostatHvac"" : {
                     ""status"" : ""HEATING""
+                },
+                ""sdm.devices.traits.Connectivity"" : {
+                    ""status"" : ""ONLINE""
                 }
             }
         }]}");
@@ -65,5 +68,6 @@ public class MetricsShould
         content.ShouldContain(@"nest_thermostat_humidity{name=""My device""} 35");
         content.ShouldContain(@"nest_thermostat_target_temperature{name=""My device""} 23");
         content.ShouldContain(@"nest_thermostat_status{name=""My device""} 1");
+        content.ShouldContain(@"nest_thermostat_connection_status{name=""My device""} 1");
     }
 }
