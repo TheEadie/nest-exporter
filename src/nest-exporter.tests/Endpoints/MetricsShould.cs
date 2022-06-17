@@ -8,14 +8,14 @@ namespace NestExporter.Tests.Endpoints;
 public class MetricsShould
 {
     private IHttpClientFactory _httpClientFactory;
-    private WebApplicationFactory<Startup> _application;
+    private WebApplicationFactory<Program> _application;
 
     [SetUp]
     public void SetUp()
     {
         _httpClientFactory = Substitute.For<IHttpClientFactory>();
 
-        using var webApplicationFactory = new WebApplicationFactory<Startup>();
+        using var webApplicationFactory = new WebApplicationFactory<Program>();
         _application = webApplicationFactory
             .WithWebHostBuilder(builder =>
             {

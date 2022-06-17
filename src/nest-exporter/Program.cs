@@ -1,35 +1,31 @@
-using System;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using NestExporter.Nest;
 using NestExporter.Services;
+using Prometheus;
 
-[assembly: CLSCompliant(false)]
-namespace NestExporter;
+var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddConsole().AddJsonConsole();
+builder.Configuration.AddEnvironmentVariables(prefix: "NestExporter_");
+builder.Services.AddLogging();
+builder.Services.AddHttpClient();
+builder.Services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
+builder.Services.AddHostedService<ThermostatCollectorService>();
+builder.Services.AddScoped<IThermostatCollector, ThermostatCollector>();
+builder.Services.AddScoped<INestClientFactory, NestClientFactory>();
 
-public static class Program
-{
-    public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
+var app = builder.Build();
 
-    private static IHostBuilder CreateHostBuilder(string[] args)
-    {
-        return Host.CreateDefaultBuilder(args)
-            .ConfigureLogging(logging => logging.AddConsole().AddJsonConsole())
-            .ConfigureAppConfiguration((_, config) => config.AddEnvironmentVariables(prefix: "NestExporter_"))
-            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
-            .ConfigureServices(services =>
-            {
-                _ = services.AddLogging()
-                    .AddHttpClient()
-                    .RemoveAll<IHttpMessageHandlerBuilderFilter>()
-                    .AddHostedService<ThermostatCollectorService>()
-                    .AddScoped<IThermostatCollector, ThermostatCollector>()
-                    .AddScoped<INestClientFactory, NestClientFactory>();
-            });
-    }
-}
+Metrics.SuppressDefaultMetrics();
+app.MapMetrics();
+
+app.MapGet("/", () => Results.Redirect("/metrics"));
+
+app.Run();
+
+
