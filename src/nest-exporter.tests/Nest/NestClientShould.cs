@@ -107,7 +107,7 @@ public class ServiceShould
     }
 
     [Test]
-    public async Task ReturnStatusWhenReceivedFromNest()
+    public async Task ReturnHvacStatusWhenReceivedFromNest()
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
@@ -125,7 +125,7 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.Status.ShouldBe("HEATING");
+        result.HeatingStatus.ShouldBe("HEATING");
     }
 
     [Test]
