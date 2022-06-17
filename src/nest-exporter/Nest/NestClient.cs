@@ -45,7 +45,6 @@ internal class NestClient : INestClient
             targetTemperature,
             thermostat.Traits.Humidity.HumidityPercent,
             thermostat.Traits.Hvac.Status,
-            thermostat.Traits.ThermostatMode.Mode,
             ecoMode,
             thermostat.Traits.Connectivity.Status);
     }

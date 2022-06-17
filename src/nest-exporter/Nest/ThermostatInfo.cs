@@ -6,6 +6,5 @@ public record ThermostatInfo(
     double TargetTemp,
     double Humidity,
     string HeatingStatus,
-    string RequestedMode,
     bool EcoMode,
     string ConnectionStatus);
