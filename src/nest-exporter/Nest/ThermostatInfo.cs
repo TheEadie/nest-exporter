@@ -5,6 +5,18 @@ public record ThermostatInfo(
     double ActualTemp,
     double TargetTemp,
     double Humidity,
-    string HeatingStatus,
+    HeatingStatus HeatingStatus,
     bool EcoMode,
-    string ConnectionStatus);
+    ConnectionStatus ConnectionStatus);
+
+public enum HeatingStatus
+{
+    Off,
+    Heating
+};
+
+public enum ConnectionStatus
+{
+    Offline,
+    Online
+};

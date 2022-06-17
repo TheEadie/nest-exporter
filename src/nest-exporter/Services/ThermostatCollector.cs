@@ -62,8 +62,8 @@ internal class ThermostatCollector : IThermostatCollector
                 ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
                 TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
                 Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
-                Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.HeatingStatus == "OFF" ? 0 : 1);
-                ConnectionStatus.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ConnectionStatus == "ONLINE" ? 1 : 0);
+                Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.HeatingStatus == HeatingStatus.Off ? 0 : 1);
+                ConnectionStatus.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ConnectionStatus == Nest.ConnectionStatus.Offline ? 0 : 1);
                 EcoMode.WithLabels(thermostatInfo.Name).Set(thermostatInfo.EcoMode ? 1 : 0);
 
                 _logger.LogInformation("{Name}: " +

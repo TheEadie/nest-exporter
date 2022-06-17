@@ -107,7 +107,7 @@ public class ServiceShould
     }
 
     [Test]
-    public async Task ReturnHvacStatusWhenReceivedFromNest()
+    public async Task ReturnHvacStatusHeatingWhenReceivedFromNest()
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
@@ -125,11 +125,33 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.HeatingStatus.ShouldBe("HEATING");
+        result.HeatingStatus.ShouldBe(HeatingStatus.Heating);
     }
 
     [Test]
-    public async Task ReturnConnectionStatusWhenReceivedFromNest()
+    public async Task ReturnHvacStatusOffWhenReceivedFromNest()
+    {
+        using var message = new MockHttpMessageHandler();
+        message.AddResponse(HttpStatusCode.OK,
+            @"{
+        ""devices"": [
+        {
+            ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""traits"" : {
+                ""sdm.devices.traits.ThermostatHvac"" : {
+                    ""status"" : ""OFF""
+                }
+            }
+        }]}");
+        using var httpClient = new HttpClient(message);
+        _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+
+        var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
+        result.HeatingStatus.ShouldBe(HeatingStatus.Off);
+    }
+
+    [Test]
+    public async Task ReturnConnectionStatusOnlineWhenReceivedFromNest()
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
@@ -147,7 +169,29 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.ConnectionStatus.ShouldBe("ONLINE");
+        result.ConnectionStatus.ShouldBe(ConnectionStatus.Online);
+    }
+
+    [Test]
+    public async Task ReturnConnectionStatusOfflineWhenReceivedFromNest()
+    {
+        using var message = new MockHttpMessageHandler();
+        message.AddResponse(HttpStatusCode.OK,
+            @"{
+        ""devices"": [
+        {
+            ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""traits"" : {
+                ""sdm.devices.traits.Connectivity"" : {
+                    ""status"" : ""OFFLINE""
+                }
+            }
+        }]}");
+        using var httpClient = new HttpClient(message);
+        _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+
+        var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
+        result.ConnectionStatus.ShouldBe(ConnectionStatus.Offline);
     }
 
     [Test]

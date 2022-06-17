@@ -44,9 +44,9 @@ internal class NestClient : INestClient
             thermostat.Traits.Temperature.ActualTemperatureCelsius,
             targetTemperature,
             thermostat.Traits.Humidity.HumidityPercent,
-            thermostat.Traits.Hvac.Status,
+            thermostat.Traits.Hvac.Status == "OFF" ? HeatingStatus.Off : HeatingStatus.Heating,
             ecoMode,
-            thermostat.Traits.Connectivity.Status);
+            thermostat.Traits.Connectivity.Status == "OFFLINE" ? ConnectionStatus.Offline : ConnectionStatus.Online);
     }
 
     private async Task<T> CallNestApi<T>(Uri requestUri)
