@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -28,13 +29,19 @@ internal class NestClient : INestClient
         _refreshToken = refreshToken;
     }
 
-    public async Task<ThermostatInfo> GetThermostatInfo()
+    public async Task<IReadOnlyCollection<ThermostatInfo>> GetThermostatInfo()
     {
         var result = await CallNestApi<DevicesResponse>(new Uri($"v1/enterprises/{_projectId}/devices", UriKind.Relative))
                         .ConfigureAwait(false);
 
-        var thermostat = result.Devices.First();
+        return result.Devices
+            .Where(x => x.Type == "sdm.devices.types.THERMOSTAT")
+            .Select(GetThermostatInfo)
+            .ToList();
+    }
 
+    private static ThermostatInfo GetThermostatInfo(DeviceResponse thermostat)
+    {
         var ecoMode = thermostat.Traits.Eco.Mode == "MANUAL_ECO";
         var targetTemperature = ecoMode
             ? thermostat.Traits.Eco.TargetTemperatureCelsius
@@ -46,7 +53,9 @@ internal class NestClient : INestClient
             thermostat.Traits.Humidity.HumidityPercent,
             thermostat.Traits.Hvac.Status == "OFF" ? HeatingStatus.Off : HeatingStatus.Heating,
             ecoMode,
-            thermostat.Traits.Connectivity.Status == "OFFLINE" ? ConnectionStatus.Offline : ConnectionStatus.Online);
+            thermostat.Traits.Connectivity.Status == "OFFLINE"
+                ? ConnectionStatus.Offline
+                : ConnectionStatus.Online);
     }
 
     private async Task<T> CallNestApi<T>(Uri requestUri)

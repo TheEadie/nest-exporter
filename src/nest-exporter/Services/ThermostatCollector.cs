@@ -58,27 +58,31 @@ internal class ThermostatCollector : IThermostatCollector
             {
                 _logger.LogInformation("Calling Nest API to update stats");
 
-                var thermostatInfo = await nestClient.GetThermostatInfo().ConfigureAwait(false);
-                ActualTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ActualTemp);
-                TargetTemp.WithLabels(thermostatInfo.Name).Set(thermostatInfo.TargetTemp);
-                Humidity.WithLabels(thermostatInfo.Name).Set(thermostatInfo.Humidity);
-                Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.HeatingStatus == HeatingStatus.Off ? 0 : 1);
-                ConnectionStatus.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ConnectionStatus == Nest.ConnectionStatus.Offline ? 0 : 1);
-                EcoMode.WithLabels(thermostatInfo.Name).Set(thermostatInfo.EcoMode ? 1 : 0);
+                var thermostats = await nestClient.GetThermostatInfo().ConfigureAwait(false);
 
-                _logger.LogInformation("{Name}: " +
-                            "Thermostat is {ConnectionStatus}. " +
-                            "Central heating is {Status}. " +
-                            "Eco mode is {EcoMode}. " +
-                            "It is currently {ActualTemp}C, {Humidity}% humidity. " +
-                            "Target is {TargetTemp}c",
-                            thermostatInfo.Name,
-                            thermostatInfo.ConnectionStatus,
-                            thermostatInfo.HeatingStatus,
-                            thermostatInfo.EcoMode ? "On" : "Off",
-                            thermostatInfo.ActualTemp,
-                            thermostatInfo.Humidity,
-                            thermostatInfo.TargetTemp);
+                foreach (var thermostat in thermostats)
+                {
+                    ActualTemp.WithLabels(thermostat.Name).Set(thermostat.ActualTemp);
+                    TargetTemp.WithLabels(thermostat.Name).Set(thermostat.TargetTemp);
+                    Humidity.WithLabels(thermostat.Name).Set(thermostat.Humidity);
+                    Status.WithLabels(thermostat.Name).Set(thermostat.HeatingStatus == HeatingStatus.Off ? 0 : 1);
+                    ConnectionStatus.WithLabels(thermostat.Name).Set(thermostat.ConnectionStatus == Nest.ConnectionStatus.Offline ? 0 : 1);
+                    EcoMode.WithLabels(thermostat.Name).Set(thermostat.EcoMode ? 1 : 0);
+
+                    _logger.LogInformation("{Name}: " +
+                                           "Thermostat is {ConnectionStatus}. " +
+                                           "Central heating is {Status}. " +
+                                           "Eco mode is {EcoMode}. " +
+                                           "It is currently {ActualTemp}C, {Humidity}% humidity. " +
+                                           "Target is {TargetTemp}c",
+                        thermostat.Name,
+                        thermostat.ConnectionStatus,
+                        thermostat.HeatingStatus,
+                        thermostat.EcoMode ? "On" : "Off",
+                        thermostat.ActualTemp,
+                        thermostat.Humidity,
+                        thermostat.TargetTemp);
+                }
 
                 await Task.Delay(60000, cancellationToken).ConfigureAwait(false);
             }

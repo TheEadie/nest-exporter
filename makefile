@@ -1,6 +1,6 @@
 IMAGE_NAME := theeadie/nest-exporter
 PLATFORMS := linux/amd64,linux/arm64
-NEXT_VERSION := 0.3
+NEXT_VERSION := 1.0
 TAG_PREFIX := 
 
 GITHUB_REPO := theeadie/nest-exporter

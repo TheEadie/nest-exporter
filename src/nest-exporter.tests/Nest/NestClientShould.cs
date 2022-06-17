@@ -27,6 +27,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"": {
                 ""sdm.devices.traits.Info"" : {
                     ""customName"" : ""My device""
@@ -37,7 +38,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.Name.ShouldBe("My device");
+        result.Count.ShouldBe(1);
+        result.First().Name.ShouldBe("My device");
     }
 
     [Test]
@@ -49,6 +51,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Temperature"" : {
                     ""ambientTemperatureCelsius"" : 23.0
@@ -59,7 +62,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.ActualTemp.ShouldBe(23);
+        result.Count.ShouldBe(1);
+        result.First().ActualTemp.ShouldBe(23);
     }
 
     [Test]
@@ -71,6 +75,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Humidity"" : {
                     ""ambientHumidityPercent"" : 35.0
@@ -81,7 +86,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.Humidity.ShouldBe(35);
+        result.Count.ShouldBe(1);
+        result.First().Humidity.ShouldBe(35);
     }
 
     [Test]
@@ -93,6 +99,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatTemperatureSetpoint"" : {
                     ""heatCelsius"" : 23.0
@@ -103,7 +110,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.TargetTemp.ShouldBe(23);
+        result.Count.ShouldBe(1);
+        result.First().TargetTemp.ShouldBe(23);
     }
 
     [Test]
@@ -115,6 +123,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatHvac"" : {
                     ""status"" : ""HEATING""
@@ -125,7 +134,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.HeatingStatus.ShouldBe(HeatingStatus.Heating);
+        result.Count.ShouldBe(1);
+        result.First().HeatingStatus.ShouldBe(HeatingStatus.Heating);
     }
 
     [Test]
@@ -137,6 +147,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatHvac"" : {
                     ""status"" : ""OFF""
@@ -147,7 +158,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.HeatingStatus.ShouldBe(HeatingStatus.Off);
+        result.Count.ShouldBe(1);
+        result.First().HeatingStatus.ShouldBe(HeatingStatus.Off);
     }
 
     [Test]
@@ -159,6 +171,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Connectivity"" : {
                     ""status"" : ""ONLINE""
@@ -169,7 +182,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.ConnectionStatus.ShouldBe(ConnectionStatus.Online);
+        result.Count.ShouldBe(1);
+        result.First().ConnectionStatus.ShouldBe(ConnectionStatus.Online);
     }
 
     [Test]
@@ -181,6 +195,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Connectivity"" : {
                     ""status"" : ""OFFLINE""
@@ -191,7 +206,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.ConnectionStatus.ShouldBe(ConnectionStatus.Offline);
+        result.Count.ShouldBe(1);
+        result.First().ConnectionStatus.ShouldBe(ConnectionStatus.Offline);
     }
 
     [Test]
@@ -203,6 +219,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatEco"" : {
                     ""mode"" : ""MANUAL_ECO""
@@ -213,7 +230,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.EcoMode.ShouldBe(true);
+        result.Count.ShouldBe(1);
+        result.First().EcoMode.ShouldBe(true);
     }
 
     [Test]
@@ -225,6 +243,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.ThermostatTemperatureSetpoint"" : {
                     ""heatCelsius"" : 23.0
@@ -239,7 +258,42 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.TargetTemp.ShouldBe(20);
+        result.Count.ShouldBe(1);
+        result.First().TargetTemp.ShouldBe(20);
+    }
+
+    [Test]
+    public async Task ReturnMultipleThermostatsWhenReceivedFromNest()
+    {
+        using var message = new MockHttpMessageHandler();
+        message.AddResponse(HttpStatusCode.OK,
+            @"{
+        ""devices"": [
+        {
+            ""name"" : ""enterprises/project-id/devices/device-one"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
+            ""traits"": {
+                ""sdm.devices.traits.Info"" : {
+                    ""customName"" : ""One""
+                }
+            }
+        },
+        {
+            ""name"" : ""enterprises/project-id/devices/device-two"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
+            ""traits"": {
+                ""sdm.devices.traits.Info"" : {
+                    ""customName"" : ""Two""
+                }
+            }
+        }]}");
+        using var httpClient = new HttpClient(message);
+        _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+
+        var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
+        result.Count.ShouldBe(2);
+        result.First().Name.ShouldBe("One");
+        result.ElementAt(1).Name.ShouldBe("Two");
     }
 
     [Test]
@@ -276,6 +330,7 @@ public class ServiceShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"" : {
                 ""sdm.devices.traits.Temperature"" : {
                     ""ambientTemperatureCelsius"" : 23.0
@@ -291,7 +346,8 @@ public class ServiceShould
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient, authHttpClient);
 
         var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
-        result.ActualTemp.ShouldBe(23);
+        result.Count.ShouldBe(1);
+        result.First().ActualTemp.ShouldBe(23);
     }
 
     [Test]

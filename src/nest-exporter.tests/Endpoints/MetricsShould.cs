@@ -36,6 +36,7 @@ public class MetricsShould
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
             ""traits"": {
                 ""sdm.devices.traits.Info"" : {
                     ""customName"" : ""My device""
@@ -77,5 +78,47 @@ public class MetricsShould
         content.ShouldContain(@"nest_thermostat_status{name=""My device""} 1");
         content.ShouldContain(@"nest_thermostat_connection_status{name=""My device""} 1");
         content.ShouldContain(@"nest_thermostat_eco_mode{name=""My device""} 1");
+    }
+
+    [Test]
+    public async Task DisplayMetricsFromMultipleThermostats()
+    {
+        using var message = new MockHttpMessageHandler();
+        message.AddResponse(HttpStatusCode.OK,
+            @"{
+        ""devices"": [
+        {
+            ""name"" : ""enterprises/project-id/devices/one"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
+            ""traits"": {
+                ""sdm.devices.traits.Info"" : {
+                    ""customName"" : ""One""
+                },
+                ""sdm.devices.traits.Temperature"" : {
+                    ""ambientTemperatureCelsius"" : 23.0
+                }
+            }
+        },
+        {
+            ""name"" : ""enterprises/project-id/devices/two"",
+            ""type"" : ""sdm.devices.types.THERMOSTAT"",
+            ""traits"": {
+                ""sdm.devices.traits.Info"" : {
+                    ""customName"" : ""Two""
+                },
+                ""sdm.devices.traits.Temperature"" : {
+                    ""ambientTemperatureCelsius"" : 20.0
+                }
+            }
+        }]}");
+        using var httpClient = new HttpClient(message);
+        _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+
+        var client = _application.CreateClient();
+        var response = await client.GetAsync(new Uri("/metrics", UriKind.Relative)).ConfigureAwait(false);
+
+        var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        content.ShouldContain(@"nest_thermostat_actual_temperature{name=""One""} 23");
+        content.ShouldContain(@"nest_thermostat_actual_temperature{name=""Two""} 20");
     }
 }
