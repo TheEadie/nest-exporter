@@ -129,6 +129,28 @@ public class ServiceShould
     }
 
     [Test]
+    public async Task ReturnConnectionStatusWhenReceivedFromNest()
+    {
+        using var message = new MockHttpMessageHandler();
+        message.AddResponse(HttpStatusCode.OK,
+            @"{
+        ""devices"": [
+        {
+            ""name"" : ""enterprises/project-id/devices/device-id"",
+            ""traits"" : {
+                ""sdm.devices.traits.Connectivity"" : {
+                    ""status"" : ""ONLINE""
+                }
+            }
+        }]}");
+        using var httpClient = new HttpClient(message);
+        _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+
+        var result = await _nestClient.GetThermostatInfo().ConfigureAwait(false);
+        result.ConnectionStatus.ShouldBe("ONLINE");
+    }
+
+    [Test]
     public async Task ThrowExceptionWhenNestApiErrors()
     {
         using var message = new MockHttpMessageHandler();

@@ -38,7 +38,8 @@ internal class NestClient : INestClient
             thermostat.Traits.Temperature.ActualTemperatureCelsius,
             thermostat.Traits.TargetTemperature.TargetTemperatureCelsius,
             thermostat.Traits.Humidity.HumidityPercent,
-            thermostat.Traits.Hvac.Status);
+            thermostat.Traits.Hvac.Status,
+            thermostat.Traits.Connectivity.Status);
     }
 
     private async Task<T> CallNestApi<T>(Uri requestUri)
