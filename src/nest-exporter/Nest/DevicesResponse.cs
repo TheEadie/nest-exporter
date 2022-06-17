@@ -71,6 +71,9 @@ internal class TraitEco
 {
     [JsonPropertyName("mode")]
     public string Mode { get; set; } = string.Empty;
+
+    [JsonPropertyName("heatCelsius")]
+    public double TargetTemperatureCelsius { get; set; }
 }
 
 internal class TraitInfo

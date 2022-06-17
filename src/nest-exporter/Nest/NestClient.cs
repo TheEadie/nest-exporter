@@ -34,13 +34,19 @@ internal class NestClient : INestClient
                         .ConfigureAwait(false);
 
         var thermostat = result.Devices.First();
+
+        var ecoMode = thermostat.Traits.Eco.Mode == "MANUAL_ECO";
+        var targetTemperature = ecoMode
+            ? thermostat.Traits.Eco.TargetTemperatureCelsius
+            : thermostat.Traits.TargetTemperature.TargetTemperatureCelsius;
+
         return new ThermostatInfo(thermostat.Traits.Info.Name,
             thermostat.Traits.Temperature.ActualTemperatureCelsius,
-            thermostat.Traits.TargetTemperature.TargetTemperatureCelsius,
+            targetTemperature,
             thermostat.Traits.Humidity.HumidityPercent,
             thermostat.Traits.Hvac.Status,
             thermostat.Traits.ThermostatMode.Mode,
-            thermostat.Traits.Eco.Mode == "MANUAL_ECO",
+            ecoMode,
             thermostat.Traits.Connectivity.Status);
     }
 

@@ -57,6 +57,10 @@ public class MetricsShould
                 },
                 ""sdm.devices.traits.ThermostatMode"" : {
                     ""mode"" : ""HEAT""
+                },
+                ""sdm.devices.traits.ThermostatEco"" : {
+                    ""mode"" : ""MANUAL_ECO"",
+                    ""heatCelsius"" : 23.0
                 }
             }
         }]}");
@@ -73,5 +77,6 @@ public class MetricsShould
         content.ShouldContain(@"nest_thermostat_heating_status{name=""My device""} 1");
         content.ShouldContain(@"nest_thermostat_connection_status{name=""My device""} 1");
         content.ShouldContain(@"nest_thermostat_requested_mode{name=""My device""} 1");
+        content.ShouldContain(@"nest_thermostat_eco_mode{name=""My device""} 1");
     }
 }

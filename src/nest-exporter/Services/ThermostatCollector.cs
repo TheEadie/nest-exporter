@@ -34,6 +34,9 @@ internal class ThermostatCollector : IThermostatCollector
     private static readonly Gauge RequestedMode =
         Metrics.CreateGauge("nest_thermostat_requested_mode", "0 if the system should be off, 1 if it should be heating", Labels);
 
+    private static readonly Gauge EcoMode =
+        Metrics.CreateGauge("nest_thermostat_eco_mode", "0 if ECO mode is off, 1 if ECO mode is on", Labels);
+
     private readonly ILogger<ThermostatCollector> _logger;
     private readonly INestClientFactory _nestClientFactory;
     private readonly IConfiguration _configuration;
@@ -65,16 +68,19 @@ internal class ThermostatCollector : IThermostatCollector
                 Status.WithLabels(thermostatInfo.Name).Set(thermostatInfo.HeatingStatus == "OFF" ? 0 : 1);
                 ConnectionStatus.WithLabels(thermostatInfo.Name).Set(thermostatInfo.ConnectionStatus == "ONLINE" ? 1 : 0);
                 RequestedMode.WithLabels(thermostatInfo.Name).Set(thermostatInfo.RequestedMode == "OFF" ? 0 : 1);
+                EcoMode.WithLabels(thermostatInfo.Name).Set(thermostatInfo.EcoMode ? 1 : 0);
 
                 _logger.LogInformation("{Name}: " +
                             "Thermostat is {ConnectionStatus}. " +
                             "Central heating is {Status} requested to be {RequestedMode}. " +
+                            "Eco mode is {EcoMode}. " +
                             "It is currently {ActualTemp}C, {Humidity}% humidity. " +
                             "Target is {TargetTemp}c",
                             thermostatInfo.Name,
                             thermostatInfo.ConnectionStatus,
                             thermostatInfo.HeatingStatus,
                             thermostatInfo.RequestedMode,
+                            thermostatInfo.EcoMode ? "ON" : "OFF",
                             thermostatInfo.ActualTemp,
                             thermostatInfo.Humidity,
                             thermostatInfo.TargetTemp);
