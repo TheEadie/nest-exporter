@@ -52,6 +52,11 @@ internal class ThermostatCollector : IThermostatCollector
             _configuration["NestApi:ProjectId"],
             _configuration["NestApi:RefreshToken"]);
 
+        _logger.LogInformation("ClientID: {ClientId}", _configuration["NestApi:ClientId"]);
+        _logger.LogInformation("ClientSecret: {ClientSecret}", _configuration["NestApi:ClientSecret"]);
+        _logger.LogInformation("ProjectId: {ProjectId}", _configuration["NestApi:ProjectId"]);
+        _logger.LogInformation("RefreshToken: {RefreshToken}", _configuration["NestApi:RefreshToken"]);
+
         while (!cancellationToken.IsCancellationRequested)
         {
             try
@@ -83,8 +88,6 @@ internal class ThermostatCollector : IThermostatCollector
                         thermostat.Humidity,
                         thermostat.TargetTemp);
                 }
-
-                await Task.Delay(60000, cancellationToken).ConfigureAwait(false);
             }
             catch (JsonException exception)
             {
@@ -94,6 +97,8 @@ internal class ThermostatCollector : IThermostatCollector
             {
                 _logger.LogError(exception, "Error calling Nest API. Issue calling HTTP API");
             }
+
+            await Task.Delay(60000, cancellationToken).ConfigureAwait(false);
         }
     }
 }
