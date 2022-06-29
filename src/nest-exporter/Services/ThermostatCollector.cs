@@ -52,10 +52,10 @@ internal class ThermostatCollector : IThermostatCollector
             _configuration["NestApi:ProjectId"],
             _configuration["NestApi:RefreshToken"]);
 
-        _logger.LogInformation("ClientID: {ClientId}", _configuration["NestApi:ClientId"]);
-        _logger.LogInformation("ClientSecret: {ClientSecret}", _configuration["NestApi:ClientSecret"]);
-        _logger.LogInformation("ProjectId: {ProjectId}", _configuration["NestApi:ProjectId"]);
-        _logger.LogInformation("RefreshToken: {RefreshToken}", _configuration["NestApi:RefreshToken"]);
+        _logger.LogDebug("ClientID: {ClientId}", _configuration["NestApi:ClientId"]);
+        _logger.LogDebug("ClientSecret: {ClientSecret}", _configuration["NestApi:ClientSecret"]);
+        _logger.LogDebug("ProjectId: {ProjectId}", _configuration["NestApi:ProjectId"]);
+        _logger.LogDebug("RefreshToken: {RefreshToken}", _configuration["NestApi:RefreshToken"]);
 
         while (!cancellationToken.IsCancellationRequested)
         {
