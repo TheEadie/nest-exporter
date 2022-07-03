@@ -1,5 +1,5 @@
 #### Build ####
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0.301@sha256:e1ed005becd2872045e39241ee3ec70f7de8fade16671ea8c95ec537ad13128d AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0.301@sha256:6d035a4d0893c8d9e38b03e811b87e7689dd9b2763a4fb3585d7eda97e8fff85 AS build
 WORKDIR /app
 
 ARG TARGETPLATFORM
