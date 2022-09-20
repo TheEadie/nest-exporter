@@ -32,7 +32,7 @@ RUN dotnet publish \
         -p:NoWarn=IL2104
 
 #### Runtime ####
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.9-alpine3.16@sha256:95067c900830694c269e800ad1801e1b7f972a9b9cf348b9c9960b72c894f998
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0.9-alpine3.16@sha256:a4cc5aa9352d4a0fc2583f912bc593fd008027aedbd54f71ea27ce081812ea80
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["./nest-exporter"]
