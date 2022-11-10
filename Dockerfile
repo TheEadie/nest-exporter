@@ -23,11 +23,10 @@ RUN dotnet publish \
         -c Release \
         --runtime alpine-"$(cat RID)" \
         --self-contained \
-        -p:PublishTrimmed=true \
         -o out \
         --no-restore \
         -p:AssemblyVersion=${VERSION} \
-        -p:Version=${VERSION} 
+        -p:Version=${VERSION}
 
 #### Runtime ####
 FROM mcr.microsoft.com/dotnet/runtime-deps:7.0.0-alpine3.16@sha256:7eed62ae41f250cd9beed1dd0f28770c26fabae0995e48562dc372dfa1f50ced

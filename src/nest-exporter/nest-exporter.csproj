@@ -3,11 +3,17 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>NestExporter</RootNamespace>
+    <Nullable>enable</Nullable>
+
     <AnalysisLevel>latest-All</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <TrimmerDefaultAction>link</TrimmerDefaultAction>
-    <Nullable>enable</Nullable>
+
+    <WarningsAsErrors>true</WarningsAsErrors>
+    <NoWarn>IL2104;IL2026</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="prometheus-net.AspNetCore" Version="7.0.0" />

@@ -23,7 +23,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -47,7 +48,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -71,7 +73,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -95,7 +98,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -119,7 +123,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -143,7 +148,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -167,7 +173,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -191,7 +198,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -215,7 +223,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -239,7 +248,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -267,7 +277,8 @@ public class ServiceShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-one"",
@@ -304,8 +315,7 @@ public class ServiceShould
         using var httpClient = new HttpClient(message);
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
-        _ = await Should.ThrowAsync<HttpRequestException>(async () =>
-            await _nestClient.GetThermostatInfo().ConfigureAwait(false)).ConfigureAwait(false);
+        _ = await Should.ThrowAsync<HttpRequestException>(_nestClient.GetThermostatInfo).ConfigureAwait(false);
     }
 
     [Test]
@@ -316,8 +326,7 @@ public class ServiceShould
         using var httpClient = new HttpClient(message);
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
 
-        _ = await Should.ThrowAsync<JsonException>(async () =>
-            await _nestClient.GetThermostatInfo().ConfigureAwait(false)).ConfigureAwait(false);
+        _ = await Should.ThrowAsync<JsonException>(_nestClient.GetThermostatInfo).ConfigureAwait(false);
     }
 
     [Test]
@@ -326,7 +335,8 @@ public class ServiceShould
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.Unauthorized, string.Empty);
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -339,7 +349,11 @@ public class ServiceShould
         }]}");
 
         using var authMessage = new MockHttpMessageHandler();
-        authMessage.AddResponse(HttpStatusCode.OK, @"{""access_token"": ""this-is-an-access-token""}");
+        authMessage.AddResponse(HttpStatusCode.OK,
+        /*lang=json,strict*/
+        @"{
+            ""access_token"": ""this-is-an-access-token""
+        }");
 
         using var httpClient = new HttpClient(message);
         using var authHttpClient = new HttpClient(authMessage);
@@ -363,8 +377,7 @@ public class ServiceShould
         using var authHttpClient = new HttpClient(authMessage);
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient, authHttpClient);
 
-        _ = await Should.ThrowAsync<HttpRequestException>(async () =>
-            await _nestClient.GetThermostatInfo().ConfigureAwait(false)).ConfigureAwait(false);
+        _ = await Should.ThrowAsync<HttpRequestException>(_nestClient.GetThermostatInfo).ConfigureAwait(false);
     }
 
     [Test]
@@ -380,8 +393,7 @@ public class ServiceShould
         using var authHttpClient = new HttpClient(authMessage);
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient, authHttpClient);
 
-        _ = await Should.ThrowAsync<JsonException>(async () =>
-            await _nestClient.GetThermostatInfo().ConfigureAwait(false)).ConfigureAwait(false);
+        _ = await Should.ThrowAsync<JsonException>(_nestClient.GetThermostatInfo).ConfigureAwait(false);
     }
 
     [Test]
@@ -392,14 +404,17 @@ public class ServiceShould
         message.AddResponse(HttpStatusCode.InternalServerError, string.Empty);
 
         using var authMessage = new MockHttpMessageHandler();
-        authMessage.AddResponse(HttpStatusCode.OK, @"{""access_token"": ""this-is-an-access-token""}");
+        authMessage.AddResponse(HttpStatusCode.OK,
+        /*lang=json,strict*/
+        @"{
+            ""access_token"": ""this-is-an-access-token""
+        }");
 
         using var httpClient = new HttpClient(message);
         using var authHttpClient = new HttpClient(authMessage);
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient, authHttpClient);
 
-        _ = await Should.ThrowAsync<HttpRequestException>(async () =>
-            await _nestClient.GetThermostatInfo().ConfigureAwait(false)).ConfigureAwait(false);
+        _ = await Should.ThrowAsync<HttpRequestException>(_nestClient.GetThermostatInfo).ConfigureAwait(false);
     }
 
     [Test]
@@ -410,13 +425,16 @@ public class ServiceShould
         message.AddResponse(HttpStatusCode.OK, "This is not JSON");
 
         using var authMessage = new MockHttpMessageHandler();
-        authMessage.AddResponse(HttpStatusCode.OK, @"{""access_token"": ""this-is-an-access-token""}");
+        authMessage.AddResponse(HttpStatusCode.OK,
+        /*lang=json,strict*/
+        @"{
+            ""access_token"": ""this-is-an-access-token""
+        }");
 
         using var httpClient = new HttpClient(message);
         using var authHttpClient = new HttpClient(authMessage);
         _ = _httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient, authHttpClient);
 
-        _ = await Should.ThrowAsync<JsonException>(async () =>
-            await _nestClient.GetThermostatInfo().ConfigureAwait(false)).ConfigureAwait(false);
+        _ = await Should.ThrowAsync<JsonException>(_nestClient.GetThermostatInfo).ConfigureAwait(false);
     }
 }

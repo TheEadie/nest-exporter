@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -47,10 +48,19 @@ internal class ThermostatCollector : IThermostatCollector
 
     public async Task Monitor(CancellationToken cancellationToken)
     {
-        var nestClient = _nestClientFactory.Create(_configuration["NestApi:ClientId"],
-            _configuration["NestApi:ClientSecret"],
-            _configuration["NestApi:ProjectId"],
-            _configuration["NestApi:RefreshToken"]);
+        var clientId = _configuration["NestApi:ClientId"] ??
+            throw new ArgumentException("ClientId not configured. Please set the NestExporter_NestApi__ClientId environment variable");
+        var clientSecret = _configuration["NestApi:ClientSecret"] ??
+            throw new ArgumentException("Client Secret not configured. Please set the NestExporter_NestApi__ClientSecret environment variable");
+        var projectId = _configuration["NestApi:ProjectId"] ??
+            throw new ArgumentException("Project Id not configured. Please set the NestExporter_NestApi__ProjectId environment variable");
+        var refreshToken = _configuration["NestApi:RefreshToken"] ??
+            throw new ArgumentException("Refresh Token not configured. Please set the NestExporter_NestApi__RefreshToken environment variable");
+
+        var nestClient = _nestClientFactory.Create(clientId,
+            clientSecret,
+            projectId,
+            refreshToken);
 
         _logger.LogDebug("ClientID: {ClientId}", _configuration["NestApi:ClientId"]);
         _logger.LogDebug("ClientSecret: {ClientSecret}", _configuration["NestApi:ClientSecret"]);

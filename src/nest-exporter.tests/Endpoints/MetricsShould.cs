@@ -25,6 +25,11 @@ public class MetricsShould
                     _ = services.AddLogging(logging => logging.ClearProviders());
                 });
             });
+
+        Environment.SetEnvironmentVariable("NestExporter_NestApi__ClientId", "fake-client-id");
+        Environment.SetEnvironmentVariable("NestExporter_NestApi__ClientSecret", "fake-client-secret");
+        Environment.SetEnvironmentVariable("NestExporter_NestApi__ProjectId", "fake-project-id");
+        Environment.SetEnvironmentVariable("NestExporter_NestApi__RefreshToken", "fake-refresh-token");
     }
 
     [Test]
@@ -32,7 +37,8 @@ public class MetricsShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/device-id"",
@@ -85,7 +91,8 @@ public class MetricsShould
     {
         using var message = new MockHttpMessageHandler();
         message.AddResponse(HttpStatusCode.OK,
-            @"{
+        /*lang=json,strict*/
+        @"{
         ""devices"": [
         {
             ""name"" : ""enterprises/project-id/devices/one"",
