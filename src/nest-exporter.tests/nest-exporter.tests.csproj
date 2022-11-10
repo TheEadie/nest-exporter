@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <RootNamespace>NestExporter.Tests</RootNamespace>
         <AnalysisLevel>latest-All</AnalysisLevel>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.0" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
       <PackageReference Include="NSubstitute" Version="4.4.0" />
       <PackageReference Include="NUnit" Version="3.13.3" />
