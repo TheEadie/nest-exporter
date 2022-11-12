@@ -29,7 +29,7 @@ RUN dotnet publish \
         -p:Version=${VERSION}
 
 #### Runtime ####
-FROM mcr.microsoft.com/dotnet/runtime-deps:7.0.0-alpine3.16@sha256:3688d34d1801a16d04c3e6ffd6b675c628f51cef935592fe1da42e7dd09dc43f
+FROM mcr.microsoft.com/dotnet/runtime-deps:7.0.0-alpine3.16@sha256:702ed84fe5d817c83036b8a40802e856d305d102aa2cbb497e3bbd635975d61d
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["./nest-exporter"]
