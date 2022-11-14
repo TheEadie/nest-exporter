@@ -3,11 +3,11 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:7.0.100@sha256:39069
 WORKDIR /app
 
 ARG TARGETPLATFORM
-RUN case ${TARGETPLATFORM} in \
+RUN case "${TARGETPLATFORM}" in \
          "linux/amd64")  RID=x64  ;; \
          "linux/arm64")  RID=arm64  ;; \
     esac \
-    && echo ${RID} > RID
+    && echo "${RID}" > RID
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 COPY *.sln ./
