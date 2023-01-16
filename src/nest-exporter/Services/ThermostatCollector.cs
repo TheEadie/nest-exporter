@@ -48,24 +48,44 @@ internal class ThermostatCollector : IThermostatCollector
 
     public async Task Monitor(CancellationToken cancellationToken)
     {
-        var clientId = _configuration["NestApi:ClientId"] ??
-            throw new ArgumentException("ClientId not configured. Please set the NestExporter_NestApi__ClientId environment variable");
-        var clientSecret = _configuration["NestApi:ClientSecret"] ??
-            throw new ArgumentException("Client Secret not configured. Please set the NestExporter_NestApi__ClientSecret environment variable");
-        var projectId = _configuration["NestApi:ProjectId"] ??
-            throw new ArgumentException("Project Id not configured. Please set the NestExporter_NestApi__ProjectId environment variable");
-        var refreshToken = _configuration["NestApi:RefreshToken"] ??
-            throw new ArgumentException("Refresh Token not configured. Please set the NestExporter_NestApi__RefreshToken environment variable");
-
-        var nestClient = _nestClientFactory.Create(clientId,
-            clientSecret,
-            projectId,
-            refreshToken);
+        var clientId = _configuration["NestApi:ClientId"];
+        var clientSecret = _configuration["NestApi:ClientSecret"];
+        var projectId = _configuration["NestApi:ProjectId"];
+        var refreshToken = _configuration["NestApi:RefreshToken"];
 
         _logger.LogDebug("ClientID: {ClientId}", _configuration["NestApi:ClientId"]);
         _logger.LogDebug("ClientSecret: {ClientSecret}", _configuration["NestApi:ClientSecret"]);
         _logger.LogDebug("ProjectId: {ProjectId}", _configuration["NestApi:ProjectId"]);
         _logger.LogDebug("RefreshToken: {RefreshToken}", _configuration["NestApi:RefreshToken"]);
+
+        if (clientId is null)
+        {
+            _logger.LogWarning("ClientId not configured. Please set the NestExporter_NestApi__ClientId environment variable");
+            return;
+        }
+
+        if (clientSecret is null)
+        {
+            _logger.LogWarning("Client Secret not configured. Please set the NestExporter_NestApi__ClientSecret environment variable");
+            return;
+        }
+
+        if (projectId is null)
+        {
+            _logger.LogWarning("Project Id not configured. Please set the NestExporter_NestApi__ProjectId environment variable");
+            return;
+        }
+
+        if (refreshToken is null)
+        {
+            _logger.LogWarning("Refresh Token not configured. Please set the NestExporter_NestApi__RefreshToken environment variable");
+            return;
+        }
+
+        var nestClient = _nestClientFactory.Create(clientId,
+            clientSecret,
+            projectId,
+            refreshToken);
 
         while (!cancellationToken.IsCancellationRequested)
         {
