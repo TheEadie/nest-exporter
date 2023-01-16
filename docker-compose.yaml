@@ -1,12 +1,15 @@
 version: "3.8"
 services:
-  nest-exporter:
-    build: .
-    ports:
-      - "5005:80"
-    environment:
-      - NestExporter_NestApi__ClientId
-      - NestExporter_NestApi__ClientSecret
-      - NestExporter_NestApi__ProjectId
-      - NestExporter_NestApi__RefreshToken
-      - ASPNETCORE_ENVIRONMENT=Development
+    nest-exporter:
+        build: .
+        ports:
+            - "5005:80"
+        environment:
+            - NestExporter_NestApi__ClientId
+            - NestExporter_NestApi__ClientSecret
+            - NestExporter_NestApi__ProjectId
+            - NestExporter_NestApi__RefreshToken
+            - NestExporter_OpenWeatherApi__RefreshToken
+            - NestExporter_OpenWeatherApi__Longitude
+            - NestExporter_OpenWeatherApi__Latitude
+            - ASPNETCORE_ENVIRONMENT=Development

@@ -20,7 +20,7 @@ public class WeatherCollectorService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Running service");
+        _logger.LogInformation("Running service - Weather Collector");
         using var scope = _serviceProvider.CreateScope();
         var service = scope.ServiceProvider.GetRequiredService<IWeatherCollector>();
         await service.Monitor(stoppingToken).ConfigureAwait(false);
