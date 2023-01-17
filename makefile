@@ -55,7 +55,7 @@ publish:
 
 start:
 	@docker-compose build --build-arg VERSION=$(VERSION)
-	@docker-compose up -d
+	@docker-compose up --build -d
 
 stop:
 	@docker-compose down

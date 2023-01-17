@@ -9,7 +9,7 @@ services:
             - NestExporter_NestApi__ClientSecret
             - NestExporter_NestApi__ProjectId
             - NestExporter_NestApi__RefreshToken
-            - NestExporter_OpenWeatherApi__RefreshToken
+            - NestExporter_OpenWeatherApi__ApiKey
             - NestExporter_OpenWeatherApi__Longitude
             - NestExporter_OpenWeatherApi__Latitude
             - ASPNETCORE_ENVIRONMENT=Development
