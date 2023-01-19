@@ -1,4 +1,4 @@
-﻿namespace NestExporter.OpenWeather;
+namespace NestExporter.OpenWeather;
 
 public interface IOpenWeatherClientFactory
 {

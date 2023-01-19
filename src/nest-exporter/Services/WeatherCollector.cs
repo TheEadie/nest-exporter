@@ -60,7 +60,7 @@ internal class WeatherCollector : IWeatherCollector
             return;
         }
 
-        var openWeatherClient = _openWeatherClientFactory.Create(apiKey,double.Parse(longitude),double.Parse(latitude));
+        var openWeatherClient = _openWeatherClientFactory.Create(apiKey, double.Parse(longitude), double.Parse(latitude));
 
         while (!cancellationToken.IsCancellationRequested)
         {
