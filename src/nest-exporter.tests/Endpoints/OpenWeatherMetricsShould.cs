@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
+using NestExporter.Services;
 using NSubstitute;
 using Shouldly;
 
@@ -23,6 +24,9 @@ public class OpenWeatherMetricsShould
                 {
                     _ = services.AddScoped(_ => _httpClientFactory);
                     _ = services.AddLogging(logging => logging.ClearProviders());
+                    _ = services.Remove(services.SingleOrDefault(
+                        d => d.ImplementationType ==
+                             typeof(ThermostatCollectorService)));
                 });
             });
 
