@@ -5,7 +5,7 @@ using Shouldly;
 
 namespace NestExporter.Tests.Endpoints;
 
-public class MetricsShould
+public class NestMetricsShould
 {
     private IHttpClientFactory _httpClientFactory;
     private WebApplicationFactory<Program> _application;

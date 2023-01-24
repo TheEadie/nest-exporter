@@ -1,6 +1,6 @@
 IMAGE_NAME := theeadie/nest-exporter
 PLATFORMS := linux/amd64,linux/arm64
-NEXT_VERSION := 1.0
+NEXT_VERSION := 2.0
 TAG_PREFIX := 
 
 GITHUB_REPO := theeadie/nest-exporter
@@ -55,7 +55,7 @@ publish:
 
 start:
 	@docker-compose build --build-arg VERSION=$(VERSION)
-	@docker-compose up -d
+	@docker-compose up --build -d
 
 stop:
 	@docker-compose down

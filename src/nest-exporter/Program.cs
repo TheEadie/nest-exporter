@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using NestExporter.Nest;
+using NestExporter.OpenWeather;
 using NestExporter.Services;
 using Prometheus;
 
@@ -18,6 +19,9 @@ builder.Services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
 builder.Services.AddHostedService<ThermostatCollectorService>();
 builder.Services.AddScoped<IThermostatCollector, ThermostatCollector>();
 builder.Services.AddScoped<INestClientFactory, NestClientFactory>();
+builder.Services.AddHostedService<WeatherCollectorService>();
+builder.Services.AddScoped<IWeatherCollector, WeatherCollector>();
+builder.Services.AddScoped<IOpenWeatherClientFactory, OpenWeatherClientFactory>();
 
 var app = builder.Build();
 
