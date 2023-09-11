@@ -19,7 +19,7 @@ jobs:
         fetch-depth: 0
 
     - name: Expose GitHub Runtime
-      uses: crazy-max/ghaction-github-runtime@v2
+      uses: crazy-max/ghaction-github-runtime@v3
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
@@ -64,7 +64,7 @@ jobs:
         fetch-depth: 0
 
     - name: Expose GitHub Runtime
-      uses: crazy-max/ghaction-github-runtime@v2
+      uses: crazy-max/ghaction-github-runtime@v3
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
