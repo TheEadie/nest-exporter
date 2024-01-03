@@ -16,6 +16,6 @@
     <NoWarn>IL2104;IL2026</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="prometheus-net.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
   </ItemGroup>
 </Project>
