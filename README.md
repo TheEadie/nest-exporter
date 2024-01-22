@@ -1,3 +1,6 @@
+> [!WARNING]  
+> This project is no longer maintained. I no longer have a Nest Themostat so I'm unable to test changes.
+
 # Nest Exporter
 
 Nest Exporter generates prometheus metrics for the Nest Thermostat using the Google Device Access API.
